@@ -3,7 +3,7 @@ set -Eeuo pipefail
 mkdir -p parallel/threadScalling parallel/taskScalling
 
 
-FNAMESOUT=("threads_4"
+FNAMESOUT=("threads_04"
            "threads_12"
            "threads_18"
            "threads_24"
@@ -44,7 +44,7 @@ for FILE in "$INPUTDIR"/*.txt; do
 done
 
 
-FNAMESOUT=("tasks_4"
+FNAMESOUT=("tasks_04"
            "tasks_12"
            "tasks_18"
            "tasks_24"
