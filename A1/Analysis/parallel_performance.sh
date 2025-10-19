@@ -1,38 +1,41 @@
 #!/usr/bin/env bash
-
-# FNAMESOUT=("threads_12"
-#            "threads_24"
-#            "threads_48")
-# THREADS=(
-# "12"
-# "24"
-# "48")
-# ITERATIONS=("83333333")
-# declare -i iter=0
-
-# INPUTDIR="Analysis/inputs/threadScalling"
-# for FILE in "$INPUTDIR"/*.txt; do 
+set -Eeuo pipefail
+mkdir -p parallel/threadScalling parallel/taskScalling
 
 
-#     OUT="parallel/threadScalling/${FNAMESOUT[iter]}.csv"
-#     : > "$OUT"
-#     echo "mode,threads,tasks,iters_per_task,total_iters,run_id,elapsed_ms" >> "$OUT"
-#     echo "Found test input file: $FILE Starting 30 iterations now..." 
+FNAMESOUT=("threads_12"
+           "threads_24"
+           "threads_48")
+THREADS=(
+"12"
+"24"
+"48")
+declare -i iter=0
 
-#     for run in {1..30}; do  
-#         echo "Starting run $run..."
-#         start_time_ms=$(date +%s%3N)  
+INPUTDIR="Analysis/inputs/threadScalling"
+for FILE in "$INPUTDIR"/*.txt; do 
 
-#         ./A1 Analysis/inputs/threadScalling/${FNAMESOUT[iter]}.txt false 
 
-#         end_time_ms=$(date +%s%3N) 
-#         elapsed_ms=$((end_time_ms - start_time_ms))
-#         echo "parallel,${THREADS[iter]},240,83333333,20000000000,$run,$elapsed_ms" >> "$OUT" 
-#         echo "Run $run completed in ${elapsed_ms} ms."
-#     done
+    OUT="parallel/threadScalling/${FNAMESOUT[iter]}.csv"
+    : > "$OUT"
+    echo "mode,threads,tasks,iters_per_task,total_iters,run_id,elapsed_ms" >> "$OUT"
+    echo "Found test input file: $FILE Starting 30 iterations now..." 
 
-#     iter+=1
-# done
+    for run in {1..30}; do  
+    
+        echo "Starting run $run..."
+        
+        start_time_ms=$(date +%s%3N)  
+        ./A1 Analysis/inputs/threadScalling/${FNAMESOUT[iter]}.txt false 
+        end_time_ms=$(date +%s%3N) 
+        elapsed_ms=$((end_time_ms - start_time_ms))
+        
+        echo "parallel,${THREADS[iter]},240,83333333,20000000000,$run,$elapsed_ms" >> "$OUT" 
+        echo "Run $run completed in ${elapsed_ms} ms."
+    done
+
+    iter+=1
+done
 
 
 FNAMESOUT=("tasks_12"

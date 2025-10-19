@@ -35,11 +35,11 @@ if [ -e $OBJFILE ]; then
     make clean
     sleep 1
 
-    echo "Building Cleaned executable..."
-    make 
+    echo "Building Cleaned executable for A1..."
+    make A1
 else 
-    echo "Building Fresh executable..."
-    make 
+    echo "Building Fresh executable A1..."
+    make A1
 fi
 
 sleep 1
@@ -53,10 +53,14 @@ for scenario in "${TESTSCENARIOS[@]}"; do
     echo -e " - $scenario"
 done
 
+echo -e "Logging all test outputs to file: $OUT"
+echo -e "===================================================================================\n"
+
+
 sleep 2
 echo -e "===================================================================================\n" >> "$OUT"
 
-echo -e "Starting Test Scenarios...\n" >> "$OUT"
+echo -e "Starting Test Scenarios...\n"
 
 for FILE in "$TESTDIR"/*.txt; do 
     # echo "Found test input file: $FILE"
@@ -72,7 +76,7 @@ for FILE in "$TESTDIR"/*.txt; do
     valgrind --tool=drd ./A1 $FILE true &>> "$OUT" 2>&1
     echo -e "\n"  >> "$OUT"
 
-    echo -e "\nCompleted Test scenario $testIter: ${TESTSCENARIOS[testIter]}" 
+    echo -e "Completed Test scenario $testIter: ${TESTSCENARIOS[testIter]}" 
 
 
     testIter+=1 
