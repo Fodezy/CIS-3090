@@ -6,6 +6,10 @@
 
 # simple test [1 thread: 1 task]: normal run, valgrind run, valgrind with drd run 
 # ls
+
+OUT="tests/test_results.log"
+: > "$OUT"
+
 OBJFILE="A1"
 TESTDIR="tests/inputs"
 declare -i testIter=0
@@ -50,23 +54,23 @@ for scenario in "${TESTSCENARIOS[@]}"; do
 done
 
 sleep 2
-echo -e "===================================================================================\n"
+echo -e "===================================================================================\n" >> "$OUT"
 
-echo -e "Starting Test Scenarios...\n"
+echo -e "Starting Test Scenarios...\n" >> "$OUT"
 
 for FILE in "$TESTDIR"/*.txt; do 
     # echo "Found test input file: $FILE"
-    echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****" 
+    echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****"  >> "$OUT"
+ 
+    echo -e "----- Base Run ----- " >> "$OUT"
+    ./A1 $FILE true >> "$OUT" 2>&1
 
-    echo -e "----- Base Run ----- "
-    ./A1 $FILE true
+    echo -e "\n"----- Valgrind Run "----- " >> "$OUT"
+    valgrind --leak-check=full ./A1 $FILE true >> "$OUT" 2>&1
 
-    echo -e "\n"----- Valgrind Run "----- "
-    valgrind --leak-check=full ./A1 $FILE true
-
-    echo -e "\n"----- DRD Run "----- "
-    valgrind --tool=drd ./A1 $FILE true
-    echo -e "\n" 
+    echo -e "\n"----- DRD Run "----- " >> "$OUT"
+    valgrind --tool=drd ./A1 $FILE true &>> "$OUT" 2>&1
+    echo -e "\n"  >> "$OUT"
 
 
     testIter+=1 

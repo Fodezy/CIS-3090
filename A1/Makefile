@@ -4,10 +4,10 @@ LDFLAGS := -pthread
 
 SRC_DIR := src
 BIN_PARALLEL := A1
-BIN_SERIAL := baseLinePie
+BIN_SERIAL := baseLinePi
 
 SRC_PARALLEL := $(SRC_DIR)/A1.c
-SRC_SERIAL := $(SRC_DIR)/baseLinePie.c
+SRC_SERIAL := $(SRC_DIR)/baseLinePi.c
 
 # Used to make all targets (both parallel and serial pie progams)
 all: $(BIN_PARALLEL) $(BIN_SERIAL)
