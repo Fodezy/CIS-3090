@@ -40,6 +40,18 @@ typedef struct WorkerCtx {
     int workerIndex;
 } WorkerCtx;
 
+// used to lock context when printing to stdout when verbose logging is set to True 
+static pthread_mutex_t printMutex = PTHREAD_MUTEX_INITIALIZER;
+
+// helper method to lock the thread wehn printing to stdout to remove DRD errors (data races)
+static void printThreadResult(int workerIndex, long long iterations, double pi) {
+    pthread_mutex_lock(&printMutex);
+    fprintf(stdout, "Thread %d completed computed Pi using %lld iterations, the result is %.12f\n",  // getting DRD errors with this - need to make thread safe 
+                       workerIndex, iterations, pi);
+    fflush(stdout);
+    pthread_mutex_unlock(&printMutex);
+}
+
 // Malloc for thread pool
 static void* checkedMalloc(size_t bytes) {
     void* p = malloc(bytes);
@@ -147,9 +159,10 @@ static void* workerMain(void* arg) {
             pthread_cond_broadcast(&pool->queue.cond);
             pthread_mutex_unlock(&pool->queue.mutex);
             if (pool->verboseOutput) {
-                printf("Thread %d completed computed Pi using %lld iterations, the result is %.12f\n",
-                       workerIndex, task->iterations, pi);
-                fflush(stdout);
+                printThreadResult(workerIndex, task->iterations, pi);
+                // fprintf(stdout, "Thread %d completed computed Pi using %lld iterations, the result is %.12f\n",  // getting DRD errors with this - need to make thread safe 
+                //        workerIndex, task->iterations, pi);
+                // fflush(stdout);
             }
             free(task);
         }
