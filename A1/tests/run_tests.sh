@@ -9,7 +9,21 @@
 OBJFILE="A1"
 TESTDIR="tests/inputs"
 declare -i testIter=0
-TESTSCENARIOS=("Simple Test [1 thread: 1 task]")
+TESTSCENARIOS=("Single Thread Test [1 thread: 1 task]", 
+               "Multiple Threads with the same amount of tasks - same iteration count [8 threads: 8 tasks]",
+               "Multiple Threads with the same amount of tasks - different iteration count [8 threads: 8 tasks]",
+               "More Threads than Tasks - same iteration count [4 threads: 2 tasks]",
+               "More Threads than Tasks - different iteration count [4 threads: 2 tasks]",
+               "Empty file test [0 threads: 0 tasks]",
+               "Zero set as thread pool size [0 threads: 1 task]",
+               "Negative thread pool size [-1 threads: 1 task]",
+               "Threads only, no tasks set [8 threads, 0 tasks]",
+               "Large iteration size (10 billion) per thread [1 thread, 1 task]", 
+               "More threads then tasks [8 threads: 4 tasks]",
+               "Some threads, a lot of tasks [8 threads: 300 tasks]",  
+               "Negative iterations for a task [4 threads: 4 tasks]",
+               "Malformed input file (non-integer task values)"
+               )
 # echo "$FILE"
 
 if [ -e $OBJFILE ]; then
@@ -32,7 +46,7 @@ sleep 2
 
 echo -e "All Test Scenarios that will be preformed"
 for scenario in "${TESTSCENARIOS[@]}"; do 
-    echo -e " - $scenario\n"
+    echo -e " - $scenario"
 done
 
 sleep 2
@@ -41,24 +55,22 @@ echo -e "=======================================================================
 echo -e "Starting Test Scenarios...\n"
 
 for FILE in "$TESTDIR"/*.txt; do 
-    # echo "Found test input file: $FILE"
-    echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****" 
+    echo "Found test input file: $FILE"
+    # echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****" 
 
-    echo -e "----- Base Run ----- "
-    ./A1 $FILE true
+    # echo -e "----- Base Run ----- "
+    # ./A1 $FILE true
 
-    echo -e "\n"----- Valgrind Run "----- "
-    valgrind --leak-check=full ./A1 $FILE true
+    # echo -e "\n"----- Valgrind Run "----- "
+    # valgrind --leak-check=full ./A1 $FILE true
 
-    echo -e "\n"----- DRD Run "----- "
-    valgrind --tool=drd ./A1 $FILE true
-    echo -e "\n" 
-
-
+    # echo -e "\n"----- DRD Run "----- "
+    # valgrind --tool=drd ./A1 $FILE true
+    # echo -e "\n" 
 
 
-    testIter+=1 
-    sleep 5
+    # testIter+=1 
+    # sleep 5
 
 done
 
