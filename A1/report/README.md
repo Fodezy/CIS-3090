@@ -33,7 +33,7 @@ Purpose: Computes Pi, and showcases the differences in thread iterations.
 ### Notes
 - Set some variables to long long to ensure iteration counts don't overflow -->
 
-## Running Tests 
+## Running Test Script
 - Setting up shell scripts as executable:
   - `chmod +x tests/run_tests.sh`
 
@@ -41,3 +41,12 @@ Purpose: Computes Pi, and showcases the differences in thread iterations.
   - `./tests/run_tests.sh`
   - This script will either build A1 fresh or clean and rebuild to ensure object file exists
   - Logs for this test file will be redirected from the Terminal to the file: `A1/tests/test_results.log`
+
+## Running performance scripts
+- Setting up shell scripts as executable:
+  - `chmod +x Analysis/serial_performance.sh`
+  - `chmod +x Analysis/parallel_performance.sh`
+
+- Running analysis scripts 
+  - `./Analysis/serial_performance.sh`
+  - `./Analysis/parallel_performance.sh`
