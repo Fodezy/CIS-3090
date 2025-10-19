@@ -3,12 +3,18 @@ set -Eeuo pipefail
 mkdir -p parallel/threadScalling parallel/taskScalling
 
 
-FNAMESOUT=("threads_12"
+FNAMESOUT=("threads_4"
+           "threads_12"
+           "threads_18"
            "threads_24"
+           "threads_30"
            "threads_48")
 THREADS=(
+"4"
 "12"
+"18"
 "24"
+"30"
 "48")
 declare -i iter=0
 
@@ -38,17 +44,26 @@ for FILE in "$INPUTDIR"/*.txt; do
 done
 
 
-FNAMESOUT=("tasks_12"
+FNAMESOUT=("tasks_4"
+           "tasks_12"
+           "tasks_18"
            "tasks_24"
+           "tasks_30"
            "tasks_48")
 TASKS=(
+    "4"
     "12"
+    "18"
     "24"
+    "30"
     "48"
 )
 ITERATIONS=(
+    "5000000000"
     "1666666667"
+    "1111111111"
     "833333334"
+    "666666666"
     "416666667"
 )
 declare -i iter=0
