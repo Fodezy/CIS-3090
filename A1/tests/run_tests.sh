@@ -72,6 +72,8 @@ for FILE in "$TESTDIR"/*.txt; do
     valgrind --tool=drd ./A1 $FILE true &>> "$OUT" 2>&1
     echo -e "\n"  >> "$OUT"
 
+    echo -e "\nCompleted Test scenario $testIter: ${TESTSCENARIOS[testIter]}" 
+
 
     testIter+=1 
     sleep 5
