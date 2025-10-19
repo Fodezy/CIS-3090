@@ -8,6 +8,8 @@
 # ls
 OBJFILE="A1"
 TESTDIR="tests/inputs"
+declare -i testIter=0
+TESTSCENARIOS=("Simple Test [1 thread: 1 task]")
 # echo "$FILE"
 
 if [ -e $OBJFILE ]; then
@@ -24,14 +26,40 @@ fi
 
 sleep 1
 echo -e "\n==================================================================================="
-echo "Running Scenarios Description:"
-echo -e "Scenarios will: \n1) Base Run: to check for code correctness, \n2) Valgrind Run: valgrind leak-check=full to check for memory leaks, \n3) DRD Run: valgrind with drd tool to check for data race conditions."
-echo -e "===================================================================================\n\n"
-sleep 1
-# Runs base case: 1 thread 1 task no mem check or race detection 
+echo "Scenario Description:"
+echo -e "Each Scenarios will test for: \n1) Base Run: to check for code correctness, \n2) Valgrind Run: valgrind leak-check=full to check for memory leaks, \n3) DRD Run: valgrind with drd tool to check for data race conditions.\n\n"
+sleep 2
+
+echo -e "All Test Scenarios that will be preformed"
+for scenario in "${TESTSCENARIOS[@]}"; do 
+    echo -e " - $scenario\n"
+done
+
+sleep 2
+echo -e "===================================================================================\n"
+
+echo -e "Starting Test Scenarios...\n"
 
 for FILE in "$TESTDIR"/*.txt; do 
-    echo "Found test input file: $FILE"
+    # echo "Found test input file: $FILE"
+    echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****" 
+
+    echo -e "----- Base Run ----- "
+    ./A1 $FILE true
+
+    echo -e "\n"----- Valgrind Run "----- "
+    valgrind --leak-check=full ./A1 $FILE true
+
+    echo -e "\n"----- DRD Run "----- "
+    valgrind --tool=drd ./A1 $FILE true
+    echo -e "\n" 
+
+
+
+
+    testIter+=1 
+    sleep 5
+
 done
 
 # echo -e "***** Simple Test [1 thread: 1 task] *****"
