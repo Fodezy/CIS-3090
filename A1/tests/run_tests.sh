@@ -55,22 +55,22 @@ echo -e "=======================================================================
 echo -e "Starting Test Scenarios...\n"
 
 for FILE in "$TESTDIR"/*.txt; do 
-    echo "Found test input file: $FILE"
-    # echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****" 
+    # echo "Found test input file: $FILE"
+    echo "***** Starting Tests for scenario $testIter: ${TESTSCENARIOS[testIter]} *****" 
 
-    # echo -e "----- Base Run ----- "
-    # ./A1 $FILE true
+    echo -e "----- Base Run ----- "
+    ./A1 $FILE true
 
-    # echo -e "\n"----- Valgrind Run "----- "
-    # valgrind --leak-check=full ./A1 $FILE true
+    echo -e "\n"----- Valgrind Run "----- "
+    valgrind --leak-check=full ./A1 $FILE true
 
-    # echo -e "\n"----- DRD Run "----- "
-    # valgrind --tool=drd ./A1 $FILE true
-    # echo -e "\n" 
+    echo -e "\n"----- DRD Run "----- "
+    valgrind --tool=drd ./A1 $FILE true
+    echo -e "\n" 
 
 
-    # testIter+=1 
-    # sleep 5
+    testIter+=1 
+    sleep 5
 
 done
 
