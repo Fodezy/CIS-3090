@@ -8,14 +8,16 @@ FNAMESOUT=("threads_04"
            "threads_18"
            "threads_24"
            "threads_30"
-           "threads_48")
+           "threads_48"
+           "threads_60")
 THREADS=(
 "4"
 "12"
 "18"
 "24"
 "30"
-"48")
+"48"
+"60")
 declare -i iter=0
 
 INPUTDIR="Analysis/inputs/threadScalling"
@@ -49,7 +51,8 @@ FNAMESOUT=("tasks_04"
            "tasks_18"
            "tasks_24"
            "tasks_30"
-           "tasks_48")
+           "tasks_48"
+           "tasks_60")
 TASKS=(
     "4"
     "12"
@@ -57,6 +60,7 @@ TASKS=(
     "24"
     "30"
     "48"
+    "60"
 )
 ITERATIONS=(
     "5000000000"
@@ -65,6 +69,7 @@ ITERATIONS=(
     "833333334"
     "666666666"
     "416666667"
+    "333333334"
 )
 declare -i iter=0
 INPUTDIR="Analysis/inputs/taskScalling"
