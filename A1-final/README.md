@@ -1,6 +1,9 @@
 # General Info
+
 Names: Alex Daniel and Eric Fode
+
 Date: October 15, 2025
+
 Purpose: Computes Pi, and showcases the differences in thread iterations.
 
 # Compile and Run
