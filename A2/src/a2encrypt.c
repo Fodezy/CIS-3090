@@ -3,9 +3,17 @@
 #include <string.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <time.h>
 
 #define MAX_STRING_SIZE 256
 #define ALPHABET_SIZE 26
+
+void swap (char *a, char *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
 int main(int argc, char** argv) {
     /* input dict steps:
@@ -52,6 +60,7 @@ int main(int argc, char** argv) {
 
     int dictCntr = 0;
     char inputDict[ALPHABET_SIZE]; // can only ever have 26 unique chars in the dict 
+    inputDict[0] = '\0'; 
     for(int i = 0; i < strlen(inputString); i++) {
         char c = ' ';
         // step 2 change to lower
@@ -83,10 +92,25 @@ int main(int argc, char** argv) {
 
 
     /* encyption dict steps:
-    step 1: random and is left up to us, I will search online for a good decrpytion method 
+    step 1: random and is left up to us, I will search online for a good decrpytion method output must go to --> ciphertext.txt
     
-    
+
+    will be using fisher-yates shuffle algo to generate a random encryption dict from the input dict 
+    found implementation for this on: https://www.geeksforgeeks.org/dsa/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
     */
+
+    int n = strlen(inputDict); // might be able to use dictCntr here instead 
+
+    srand(time(NULL));
+    for(int i = n-1; i > 0; i--) {
+        int j = rand() % (i+1);
+        
+        swap(&inputDict[i], &inputDict[j]);
+    }
+
+    printf("Encryption dict (shuffled input dict): %s\n", inputDict);
+
+    
 
     return 0; 
 }
