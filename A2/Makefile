@@ -1,7 +1,10 @@
-all: a2encrypt
+all: a2encrypt a2decrypt_serial
 
 a2encrypt: src/a2encrypt.c
 	mpicc src/a2encrypt.c -o a2encrypt
 
+a2decrypt_serial: src/a2decrypt_serial.c
+	mpicc src/a2decrypt_serial.c -o a2decrypt_serial
+
 clean: 
-	rm a2encrypt
+	rm a2encrypt a2decrypt_serial

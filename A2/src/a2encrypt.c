@@ -66,14 +66,12 @@ int main(int argc, char** argv) {
     int dictCntr = 0;
     char inputDict[ALPHABET_SIZE] = {0}; // can only ever have 26 unique chars in the dict 
     for(int i = 0; i < strlen(inputString); i++) {
-        char c = ' ';
-        // step 2 change to lower
-        c = tolower(inputString[i]); 
+        char c = tolower(inputString[i]); 
 
         // steps for 3
         // ignore spaces, newlines, and non alpha chars --> therefore when found skip current iter (using: continue)
         if(c == ' ' || c == '\n' || isalpha(c) == 0) {
-            printf("hit\n");
+            // printf("hit\n");
             continue;
         }
 
