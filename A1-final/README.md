@@ -33,6 +33,7 @@ Purpose: Computes Pi, and showcases the differences in thread iterations.
 ## Running Test Script
 - Setting up shell scripts as executable:
   - `chmod +x tests/run_tests.sh`
+    - if you get a permission error just move onto running the test, it should still work
 
 - Running Tests:
   - `./tests/run_tests.sh`
@@ -43,6 +44,8 @@ Purpose: Computes Pi, and showcases the differences in thread iterations.
 - Setting up shell scripts as executable:
   - `chmod +x Analysis/serial_performance.sh`
   - `chmod +x Analysis/parallel_performance.sh`
+    - if you get a permission error just move onto running the test, it should still work
+    
 
 - Running analysis scripts 
   - `./Analysis/serial_performance.sh`
