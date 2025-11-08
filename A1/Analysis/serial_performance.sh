@@ -8,7 +8,7 @@ ITERATIONS=20000000000 # 20 billion iterations
 for run in {1..30}; do  
     echo "Starting run $run..."
     start_time_ms=$(date +%s%3N)  
-    ./baseLinePie "$ITERATIONS" > /dev/null 
+    ./baseLinePi "$ITERATIONS" > /dev/null 
     end_time_ms=$(date +%s%3N) 
     elapsed_ms=$((end_time_ms - start_time_ms))
     echo "serial,$run,$ITERATIONS,$elapsed_ms" >> "$OUT" 

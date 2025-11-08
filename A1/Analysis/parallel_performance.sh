@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
-mkdir -p parallel/threadScalling parallel/taskScalling
+mkdir -p Analysis/outputs/parallel/threadScalling Analysis/outputs/parallel/taskScalling
 
 
 FNAMESOUT=("threads_04"

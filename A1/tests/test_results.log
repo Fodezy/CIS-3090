@@ -1,0 +1,1457 @@
+===================================================================================
+
+***** Starting Tests for scenario 0: Single Thread Test [1 thread: 1 task], *****
+----- Base Run ----- 
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+
+----- Valgrind Run ----- 
+==91660== Memcheck, a memory error detector
+==91660== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==91660== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==91660== Command: ./A1 tests/inputs/t00_single_thread_small.txt true
+==91660== 
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+==91660== 
+==91660== HEAP SUMMARY:
+==91660==     in use at exit: 0 bytes in 0 blocks
+==91660==   total heap usage: 7 allocs, 7 frees, 1,816 bytes allocated
+==91660== 
+==91660== All heap blocks were freed -- no leaks are possible
+==91660== 
+==91660== For lists of detected and suppressed errors, rerun with: -s
+==91660== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==91681== drd, a thread error detector
+==91681== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==91681== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==91681== Command: ./A1 tests/inputs/t00_single_thread_small.txt true
+==91681== 
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+==91681== 
+==91681== For lists of detected and suppressed errors, rerun with: -s
+==91681== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 16 from 8)
+
+
+***** Starting Tests for scenario 1: Multiple Threads with the same amount of tasks - same iteration count [8 threads: 8 tasks], *****
+----- Base Run ----- 
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 6 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 8 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 5 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 7 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+
+----- Valgrind Run ----- 
+==91758== Memcheck, a memory error detector
+==91758== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==91758== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==91758== Command: ./A1 tests/inputs/t01_many_threads_same_amount_of_tasks.txt true
+==91758== 
+Thread 7 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 6 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 5 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 5 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 8 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 7 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+==91758== 
+==91758== HEAP SUMMARY:
+==91758==     in use at exit: 0 bytes in 0 blocks
+==91758==   total heap usage: 21 allocs, 21 frees, 4,056 bytes allocated
+==91758== 
+==91758== All heap blocks were freed -- no leaks are possible
+==91758== 
+==91758== For lists of detected and suppressed errors, rerun with: -s
+==91758== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==91780== drd, a thread error detector
+==91780== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==91780== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==91780== Command: ./A1 tests/inputs/t01_many_threads_same_amount_of_tasks.txt true
+==91780== 
+Thread 7 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 8 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 8 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 5 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 7 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 6 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+==91780== 
+==91780== For lists of detected and suppressed errors, rerun with: -s
+==91780== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 14 from 8)
+
+
+***** Starting Tests for scenario 2: Multiple Threads with the same amount of tasks - different iteration count [8 threads: 8 tasks], *****
+----- Base Run ----- 
+Thread 1 completed computed Pi using 300 iterations, the result is 3.138259329516
+Thread 6 completed computed Pi using 6053 iterations, the result is 3.141757860924
+Thread 4 completed computed Pi using 250000 iterations, the result is 3.141588653590
+Thread 3 completed computed Pi using 53 iterations, the result is 3.160458899626
+Thread 7 completed computed Pi using 896076 iterations, the result is 3.141591537613
+Thread 8 completed computed Pi using 1000000 iterations, the result is 3.141591653590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 5 completed computed Pi using 346768989 iterations, the result is 3.141592656473
+
+----- Valgrind Run ----- 
+==91884== Memcheck, a memory error detector
+==91884== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==91884== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==91884== Command: ./A1 tests/inputs/t02_many_threads_mixed_small.txt true
+==91884== 
+Thread 8 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 300 iterations, the result is 3.138259329516
+Thread 4 completed computed Pi using 250000 iterations, the result is 3.141588653590
+Thread 4 completed computed Pi using 53 iterations, the result is 3.160458899626
+Thread 8 completed computed Pi using 346768989 iterations, the result is 3.141592656473
+Thread 2 completed computed Pi using 1000000 iterations, the result is 3.141591653590
+Thread 7 completed computed Pi using 6053 iterations, the result is 3.141757860924
+Thread 6 completed computed Pi using 896076 iterations, the result is 3.141591537613
+==91884== 
+==91884== HEAP SUMMARY:
+==91884==     in use at exit: 0 bytes in 0 blocks
+==91884==   total heap usage: 21 allocs, 21 frees, 4,056 bytes allocated
+==91884== 
+==91884== All heap blocks were freed -- no leaks are possible
+==91884== 
+==91884== For lists of detected and suppressed errors, rerun with: -s
+==91884== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==91974== drd, a thread error detector
+==91974== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==91974== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==91974== Command: ./A1 tests/inputs/t02_many_threads_mixed_small.txt true
+==91974== 
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 300 iterations, the result is 3.138259329516
+Thread 5 completed computed Pi using 1000000 iterations, the result is 3.141591653590
+Thread 3 completed computed Pi using 6053 iterations, the result is 3.141757860924
+Thread 6 completed computed Pi using 250000 iterations, the result is 3.141588653590
+Thread 1 completed computed Pi using 346768989 iterations, the result is 3.141592656473
+Thread 8 completed computed Pi using 896076 iterations, the result is 3.141591537613
+Thread 3 completed computed Pi using 53 iterations, the result is 3.160458899626
+==91974== 
+==91974== For lists of detected and suppressed errors, rerun with: -s
+==91974== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 12 from 6)
+
+
+***** Starting Tests for scenario 3: More Threads than Tasks - same iteration count [4 threads: 2 tasks], *****
+----- Base Run ----- 
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+
+----- Valgrind Run ----- 
+==92140== Memcheck, a memory error detector
+==92140== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92140== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92140== Command: ./A1 tests/inputs/t03_many_threads_shared_equal_small.txt true
+==92140== 
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+==92140== 
+==92140== HEAP SUMMARY:
+==92140==     in use at exit: 0 bytes in 0 blocks
+==92140==   total heap usage: 17 allocs, 17 frees, 2,872 bytes allocated
+==92140== 
+==92140== All heap blocks were freed -- no leaks are possible
+==92140== 
+==92140== For lists of detected and suppressed errors, rerun with: -s
+==92140== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==92163== drd, a thread error detector
+==92163== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==92163== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92163== Command: ./A1 tests/inputs/t03_many_threads_shared_equal_small.txt true
+==92163== 
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 1 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+==92163== 
+==92163== For lists of detected and suppressed errors, rerun with: -s
+==92163== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 16 from 8)
+
+
+***** Starting Tests for scenario 4: More Threads than Tasks - different iteration count [4 threads: 2 tasks], *****
+----- Base Run ----- 
+Thread 1 completed computed Pi using 300 iterations, the result is 3.138259329516
+Thread 3 completed computed Pi using 896076 iterations, the result is 3.141591537613
+Thread 1 completed computed Pi using 250000 iterations, the result is 3.141588653590
+Thread 3 completed computed Pi using 1000000 iterations, the result is 3.141591653590
+Thread 1 completed computed Pi using 6053 iterations, the result is 3.141757860924
+Thread 3 completed computed Pi using 53 iterations, the result is 3.160458899626
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 4 completed computed Pi using 346768989 iterations, the result is 3.141592656473
+
+----- Valgrind Run ----- 
+==92255== Memcheck, a memory error detector
+==92255== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92255== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92255== Command: ./A1 tests/inputs/t04_many_threads_shared_mixed_small.txt true
+==92255== 
+Thread 2 completed computed Pi using 300 iterations, the result is 3.138259329516
+Thread 4 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 2 completed computed Pi using 896076 iterations, the result is 3.141591537613
+Thread 2 completed computed Pi using 1000000 iterations, the result is 3.141591653590
+Thread 3 completed computed Pi using 250000 iterations, the result is 3.141588653590
+Thread 2 completed computed Pi using 6053 iterations, the result is 3.141757860924
+Thread 1 completed computed Pi using 346768989 iterations, the result is 3.141592656473
+Thread 4 completed computed Pi using 53 iterations, the result is 3.160458899626
+==92255== 
+==92255== HEAP SUMMARY:
+==92255==     in use at exit: 0 bytes in 0 blocks
+==92255==   total heap usage: 17 allocs, 17 frees, 2,872 bytes allocated
+==92255== 
+==92255== All heap blocks were freed -- no leaks are possible
+==92255== 
+==92255== For lists of detected and suppressed errors, rerun with: -s
+==92255== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==92333== drd, a thread error detector
+==92333== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==92333== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92333== Command: ./A1 tests/inputs/t04_many_threads_shared_mixed_small.txt true
+==92333== 
+Thread 2 completed computed Pi using 5000000 iterations, the result is 3.141592453590
+Thread 3 completed computed Pi using 300 iterations, the result is 3.138259329516
+Thread 2 completed computed Pi using 250000 iterations, the result is 3.141588653590
+Thread 1 completed computed Pi using 896076 iterations, the result is 3.141591537613
+Thread 3 completed computed Pi using 1000000 iterations, the result is 3.141591653590
+Thread 3 completed computed Pi using 53 iterations, the result is 3.160458899626
+Thread 4 completed computed Pi using 346768989 iterations, the result is 3.141592656473
+Thread 2 completed computed Pi using 6053 iterations, the result is 3.141757860924
+==92333== 
+==92333== For lists of detected and suppressed errors, rerun with: -s
+==92333== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 12 from 6)
+
+
+***** Starting Tests for scenario 5: Empty file test [0 threads: 0 tasks], *****
+----- Base Run ----- 
+Invalid first line: number of threads must be > 0
+
+----- Valgrind Run ----- 
+==92491== Memcheck, a memory error detector
+==92491== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92491== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92491== Command: ./A1 tests/inputs/t05_empty_file.txt true
+==92491== 
+Invalid first line: number of threads must be > 0
+==92491== 
+==92491== HEAP SUMMARY:
+==92491==     in use at exit: 0 bytes in 0 blocks
+==92491==   total heap usage: 2 allocs, 2 frees, 984 bytes allocated
+==92491== 
+==92491== All heap blocks were freed -- no leaks are possible
+==92491== 
+==92491== For lists of detected and suppressed errors, rerun with: -s
+==92491== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==92499== drd, a thread error detector
+==92499== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==92499== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92499== Command: ./A1 tests/inputs/t05_empty_file.txt true
+==92499== 
+Invalid first line: number of threads must be > 0
+==92499== 
+==92499== For lists of detected and suppressed errors, rerun with: -s
+==92499== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+***** Starting Tests for scenario 6: Zero set as thread pool size [0 threads: 1 task], *****
+----- Base Run ----- 
+Invalid first line: number of threads must be > 0
+
+----- Valgrind Run ----- 
+==92567== Memcheck, a memory error detector
+==92567== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92567== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92567== Command: ./A1 tests/inputs/t06_zero_thread_pool_size.txt true
+==92567== 
+Invalid first line: number of threads must be > 0
+==92567== 
+==92567== HEAP SUMMARY:
+==92567==     in use at exit: 0 bytes in 0 blocks
+==92567==   total heap usage: 2 allocs, 2 frees, 984 bytes allocated
+==92567== 
+==92567== All heap blocks were freed -- no leaks are possible
+==92567== 
+==92567== For lists of detected and suppressed errors, rerun with: -s
+==92567== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==92574== drd, a thread error detector
+==92574== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==92574== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92574== Command: ./A1 tests/inputs/t06_zero_thread_pool_size.txt true
+==92574== 
+Invalid first line: number of threads must be > 0
+==92574== 
+==92574== For lists of detected and suppressed errors, rerun with: -s
+==92574== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+***** Starting Tests for scenario 7: Negative thread pool size [-1 threads: 1 task], *****
+----- Base Run ----- 
+Invalid first line: number of threads must be > 0
+
+----- Valgrind Run ----- 
+==92646== Memcheck, a memory error detector
+==92646== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92646== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92646== Command: ./A1 tests/inputs/t07_negative_thread_pool_size.txt true
+==92646== 
+Invalid first line: number of threads must be > 0
+==92646== 
+==92646== HEAP SUMMARY:
+==92646==     in use at exit: 0 bytes in 0 blocks
+==92646==   total heap usage: 2 allocs, 2 frees, 984 bytes allocated
+==92646== 
+==92646== All heap blocks were freed -- no leaks are possible
+==92646== 
+==92646== For lists of detected and suppressed errors, rerun with: -s
+==92646== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==92650== drd, a thread error detector
+==92650== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==92650== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92650== Command: ./A1 tests/inputs/t07_negative_thread_pool_size.txt true
+==92650== 
+Invalid first line: number of threads must be > 0
+==92650== 
+==92650== For lists of detected and suppressed errors, rerun with: -s
+==92650== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+***** Starting Tests for scenario 8: Threads only, no tasks set [8 threads, 0 tasks], *****
+----- Base Run ----- 
+
+----- Valgrind Run ----- 
+==92732== Memcheck, a memory error detector
+==92732== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92732== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92732== Command: ./A1 tests/inputs/t08_threads_only_no_tasks.txt true
+==92732== 
+==92732== 
+==92732== HEAP SUMMARY:
+==92732==     in use at exit: 0 bytes in 0 blocks
+==92732==   total heap usage: 12 allocs, 12 frees, 3,352 bytes allocated
+==92732== 
+==92732== All heap blocks were freed -- no leaks are possible
+==92732== 
+==92732== For lists of detected and suppressed errors, rerun with: -s
+==92732== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==92741== drd, a thread error detector
+==92741== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==92741== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92741== Command: ./A1 tests/inputs/t08_threads_only_no_tasks.txt true
+==92741== 
+==92741== 
+==92741== For lists of detected and suppressed errors, rerun with: -s
+==92741== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 14 from 8)
+
+
+***** Starting Tests for scenario 9: Large iteration size (10 billion) per thread [1 thread, 1 task], *****
+----- Base Run ----- 
+Thread 4 completed computed Pi using 10000000000 iterations, the result is 3.141592653488
+
+----- Valgrind Run ----- 
+==92915== Memcheck, a memory error detector
+==92915== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==92915== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==92915== Command: ./A1 tests/inputs/t09_large_iteration_size.txt true
+==92915== 
+Thread 3 completed computed Pi using 10000000000 iterations, the result is 3.141592653488
+==92915== 
+==92915== HEAP SUMMARY:
+==92915==     in use at exit: 0 bytes in 0 blocks
+==92915==   total heap usage: 10 allocs, 10 frees, 2,704 bytes allocated
+==92915== 
+==92915== All heap blocks were freed -- no leaks are possible
+==92915== 
+==92915== For lists of detected and suppressed errors, rerun with: -s
+==92915== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==94779== drd, a thread error detector
+==94779== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==94779== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==94779== Command: ./A1 tests/inputs/t09_large_iteration_size.txt true
+==94779== 
+Thread 1 completed computed Pi using 10000000000 iterations, the result is 3.141592653488
+==94779== 
+==94779== For lists of detected and suppressed errors, rerun with: -s
+==94779== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 16 from 8)
+
+
+***** Starting Tests for scenario 10: More threads then tasks [8 threads: 4 tasks], *****
+----- Base Run ----- 
+Thread 4 completed computed Pi using 3445 iterations, the result is 3.141882929346
+Thread 3 completed computed Pi using 3124123 iterations, the result is 3.141592973679
+Thread 1 completed computed Pi using 23484523 iterations, the result is 3.141592696171
+Thread 8 completed computed Pi using 2345234523 iterations, the result is 3.141592654015
+
+----- Valgrind Run ----- 
+==97331== Memcheck, a memory error detector
+==97331== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==97331== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==97331== Command: ./A1 tests/inputs/t10_more_threads_then_tasks.txt true
+==97331== 
+Thread 4 completed computed Pi using 23484523 iterations, the result is 3.141592696171
+Thread 7 completed computed Pi using 3124123 iterations, the result is 3.141592973679
+Thread 1 completed computed Pi using 3445 iterations, the result is 3.141882929346
+Thread 8 completed computed Pi using 2345234523 iterations, the result is 3.141592654015
+==97331== 
+==97331== HEAP SUMMARY:
+==97331==     in use at exit: 0 bytes in 0 blocks
+==97331==   total heap usage: 17 allocs, 17 frees, 3,960 bytes allocated
+==97331== 
+==97331== All heap blocks were freed -- no leaks are possible
+==97331== 
+==97331== For lists of detected and suppressed errors, rerun with: -s
+==97331== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==97785== drd, a thread error detector
+==97785== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==97785== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==97785== Command: ./A1 tests/inputs/t10_more_threads_then_tasks.txt true
+==97785== 
+Thread 2 completed computed Pi using 23484523 iterations, the result is 3.141592696171
+Thread 6 completed computed Pi using 3124123 iterations, the result is 3.141592973679
+Thread 1 completed computed Pi using 3445 iterations, the result is 3.141882929346
+Thread 4 completed computed Pi using 2345234523 iterations, the result is 3.141592654015
+==97785== 
+==97785== For lists of detected and suppressed errors, rerun with: -s
+==97785== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 14 from 8)
+
+
+***** Starting Tests for scenario 11: Some threads, a lot of tasks [8 threads: 300 tasks], *****
+----- Base Run ----- 
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+
+----- Valgrind Run ----- 
+==98444== Memcheck, a memory error detector
+==98444== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==98444== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==98444== Command: ./A1 tests/inputs/t11_a_lot_of_tasks.txt true
+==98444== 
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+==98444== 
+==98444== HEAP SUMMARY:
+==98444==     in use at exit: 0 bytes in 0 blocks
+==98444==   total heap usage: 313 allocs, 313 frees, 11,064 bytes allocated
+==98444== 
+==98444== All heap blocks were freed -- no leaks are possible
+==98444== 
+==98444== For lists of detected and suppressed errors, rerun with: -s
+==98444== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==98466== drd, a thread error detector
+==98466== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==98466== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==98466== Command: ./A1 tests/inputs/t11_a_lot_of_tasks.txt true
+==98466== 
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 2 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 4 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 6 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 3 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 5 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 7 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 8 completed computed Pi using 10000 iterations, the result is 3.141492653590
+Thread 1 completed computed Pi using 10000 iterations, the result is 3.141492653590
+==98466== 
+==98466== For lists of detected and suppressed errors, rerun with: -s
+==98466== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 12 from 6)
+
+
+***** Starting Tests for scenario 12: Negative iterations for a task [4 threads: 4 tasks], *****
+----- Base Run ----- 
+Ignoring negative iteration count: -100
+Ignoring negative iteration count: -34
+Thread 4 completed computed Pi using 100 iterations, the result is 3.131592903559
+Ignoring negative iteration count: -5000
+
+----- Valgrind Run ----- 
+==98546== Memcheck, a memory error detector
+==98546== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==98546== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==98546== Command: ./A1 tests/inputs/t12_negative_iterations.txt true
+==98546== 
+Ignoring negative iteration count: -100
+Thread 3 completed computed Pi using 100 iterations, the result is 3.131592903559
+Ignoring negative iteration count: -34
+Ignoring negative iteration count: -5000
+==98546== 
+==98546== HEAP SUMMARY:
+==98546==     in use at exit: 0 bytes in 0 blocks
+==98546==   total heap usage: 10 allocs, 10 frees, 2,704 bytes allocated
+==98546== 
+==98546== All heap blocks were freed -- no leaks are possible
+==98546== 
+==98546== For lists of detected and suppressed errors, rerun with: -s
+==98546== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==98564== drd, a thread error detector
+==98564== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==98564== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==98564== Command: ./A1 tests/inputs/t12_negative_iterations.txt true
+==98564== 
+Ignoring negative iteration count: -100
+Ignoring negative iteration count: -34
+Thread 1 completed computed Pi using 100 iterations, the result is 3.131592903559
+Ignoring negative iteration count: -5000
+==98564== 
+==98564== For lists of detected and suppressed errors, rerun with: -s
+==98564== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 20 from 10)
+
+
+***** Starting Tests for scenario 13: Malformed input file (non-integer task values) *****
+----- Base Run ----- 
+
+----- Valgrind Run ----- 
+==98647== Memcheck, a memory error detector
+==98647== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
+==98647== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==98647== Command: ./A1 tests/inputs/t13_random_input.txt true
+==98647== 
+==98647== 
+==98647== HEAP SUMMARY:
+==98647==     in use at exit: 0 bytes in 0 blocks
+==98647==   total heap usage: 8 allocs, 8 frees, 2,168 bytes allocated
+==98647== 
+==98647== All heap blocks were freed -- no leaks are possible
+==98647== 
+==98647== For lists of detected and suppressed errors, rerun with: -s
+==98647== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+----- DRD Run ----- 
+==98652== drd, a thread error detector
+==98652== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==98652== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==98652== Command: ./A1 tests/inputs/t13_random_input.txt true
+==98652== 
+==98652== 
+==98652== For lists of detected and suppressed errors, rerun with: -s
+==98652== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 14 from 6)
+
+
