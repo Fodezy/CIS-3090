@@ -41,12 +41,41 @@ int main(int argc, char** argv) {
     }
 
     // step 2: convert to lower case
-    for(int i = 0; inputString[i]; i++) {
-        inputString[i] = tolower(inputString[i]);
-    }
+    // for(int i = 0; inputString[i]; i++) {
+    //     inputString[i] = tolower(inputString[i]);
+    // }
 
     // step 3: remove / ignore spaces and duplicate chars
     // loop over string and store firsrt occurence of char into new string and ignore spaces 
+
+    // gonna combine steps 2 and 3
+
+    int dictCntr = 0;
+    char inputDict[ALPHABET_SIZE]; // can only ever have 26 unique chars in the dict 
+    for(int i = 0; i < strlen(inputString); i++) {
+        char c = ' ';
+        // step 2 change to lower
+        c = tolower(inputString[i]); 
+
+        // steps for 3
+        // ignore spaces, newlines, and non alpha chars --> therefore when found skip current iter (using: continue)
+        if(c == ' ' || c == '\n' || isalpha(c) == 0) {
+            printf("hit\n");
+            continue;
+        }
+
+        //check for duplicates in string 
+        if(strchr(inputDict, c) == NULL) {
+            inputDict[dictCntr] = c;
+            dictCntr++;
+        }
+        // printf("Skipped ' ', '\\n', and non alpha chars\n");
+    }
+
+    inputDict[dictCntr] = '\0'; // need to null terminate 
+    
+    printf("Input string after processing: %s\n", inputString);
+    printf("Processed input string (no spaces/duplicates/non-alpha): %s\n", inputDict);
 
 
 
