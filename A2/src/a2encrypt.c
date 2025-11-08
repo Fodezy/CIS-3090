@@ -10,7 +10,7 @@
 
 void swap (char *a, char *b)
 {
-    int temp = *a;
+    char temp = *a;
     *a = *b;
     *b = temp;
 }
@@ -38,6 +38,11 @@ int main(int argc, char** argv) {
         }
     }
 
+    if(strSize + 1 > MAX_STRING_SIZE) {
+        fprintf(stderr, "Error: Input string is too, long, max size is 256 chars\n");
+        return 0;            
+    }
+
     char inputString[MAX_STRING_SIZE];
     inputString[0] = '\0'; // initialize to empty string
 
@@ -59,8 +64,7 @@ int main(int argc, char** argv) {
     // gonna combine steps 2 and 3
 
     int dictCntr = 0;
-    char inputDict[ALPHABET_SIZE]; // can only ever have 26 unique chars in the dict 
-    inputDict[0] = '\0'; 
+    char inputDict[ALPHABET_SIZE] = {0}; // can only ever have 26 unique chars in the dict 
     for(int i = 0; i < strlen(inputString); i++) {
         char c = ' ';
         // step 2 change to lower
@@ -85,11 +89,7 @@ int main(int argc, char** argv) {
     
     printf("Input string after processing: %s\n", inputString);
     printf("Processed input string (no spaces/duplicates/non-alpha): %s\n", inputDict);
-
-
-
-
-
+    
 
     /* encyption dict steps:
     step 1: random and is left up to us, I will search online for a good decrpytion method output must go to --> ciphertext.txt
@@ -99,17 +99,62 @@ int main(int argc, char** argv) {
     found implementation for this on: https://www.geeksforgeeks.org/dsa/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
     */
 
-    int n = strlen(inputDict); // might be able to use dictCntr here instead 
+    char encryptionDict[ALPHABET_SIZE];
+    strcpy(encryptionDict, inputDict); // copy input dict to encryption dict to be shuffled
+
+    int n = strlen(encryptionDict); // might be able to use dictCntr here instead 
 
     srand(time(NULL));
     for(int i = n-1; i > 0; i--) {
         int j = rand() % (i+1);
         
-        swap(&inputDict[i], &inputDict[j]);
+        swap(&encryptionDict[i], &encryptionDict[j]);
     }
 
-    printf("Encryption dict (shuffled input dict): %s\n", inputDict);
+    printf("Encryption dict (shuffled input dict): %s\n", encryptionDict);
 
+
+    // Now I need to encrpyt the string using mapping 
+    char cipherString[MAX_STRING_SIZE] = {0};
+    int cipherCntr = 0;
+
+    for(int i = 0; i < strlen(inputString); i++) {
+        char c = tolower(inputString[i]);
+        // used to keep if the char is a space or non alpha char 
+        if(isalpha(c) == 0) {
+            cipherString[cipherCntr] = c;
+            cipherCntr++;
+            continue;
+        }
+
+        int index = -1;
+        for(int j = 0; j < strlen(inputDict); j++) {
+            if(inputDict[j] == c) {
+                index = j;
+                break;
+            }
+        }
+
+        if(index != -1) {
+            cipherString[cipherCntr] = encryptionDict[index];
+            cipherCntr++;
+        }
+    }
+
+    cipherString[cipherCntr] = '\0'; 
+
+    printf("Ciphertext: %s\n", cipherString);
+
+    // need to print output to a file now 
+
+    FILE *fout = fopen("ciphertext.txt", "w"); 
+    if(fout == NULL) {
+        perror("fopen");
+        return 1;
+    }
+
+    fprintf(fout, "%s\n", cipherString);
+    fclose(fout);
     
 
     return 0; 
