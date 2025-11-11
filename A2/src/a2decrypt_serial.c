@@ -20,19 +20,25 @@ void swap(char *x, char *y) {
     *y = temp;
 }
 
-void permute(char *word, int l, int r) {
+void permute(char *decryptWord, char *permuteWord, int l, int r) {
     int i; 
     if(l == r) {
-        printf("permutation: %s\n", word);
+        printf("permutation: %s\n", permuteWord);
+        char mapping[ALPHABET_SIZE] = {0};
+        int wordLen = strlen(decryptWord);
 
+        for(int i = 0; i < wordLen; i++) {
+            mapping[decryptWord[i] - 97] = permuteWord[i];
+            printf("mapping[%c - 97] = %c\n", decryptWord[i], permuteWord[i]);
+        }
         
         // this is where i would do the dict check 
     } else {
         for(int i = l; i <= r; i++) {
-            swap((word  + l), (word + i));
-            permute(word, l + 1, r);
+            swap((permuteWord  + l), (permuteWord + i));
+            permute(decryptWord, permuteWord, l + 1, r);
 
-            swap((word + l), (word + i)); 
+            swap((permuteWord + l), (permuteWord + i)); 
         }
     }
 }
@@ -136,7 +142,7 @@ int main(int argc, char** argv) {
     // we dont want to modify the original decrypt dict so I made a copy early used within the permutes that can be used to check against the dict
     int n = strlen(permuteDecyptDict);
     // refrence for permute usage: https://www.geeksforgeeks.org/c/c-program-to-print-all-permutations-of-a-given-string/
-    permute(permuteDecyptDict, 0, n - 1);
+    permute(decryptDict, permuteDecyptDict, 0, n - 1);
 
     // the above will do the following, for each permutation: it will check each word within the dictionary using binary search (bsearch) 
     //if a word is found it will store it into memory, then countinue untill all permutations have been checked. 
