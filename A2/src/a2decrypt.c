@@ -223,7 +223,7 @@ int main(int argc, char** argv) {
 
     char word[MAX_STRING_SIZE];
     while(fgets(word, MAX_STRING_SIZE, fDictIn)) {
-        // word[strcspn(word, "\n")] = '\0';
+        word[strcspn(word, "\n\r")] = '\0';
 
         dict[wrdCntr] = strdup(word);
         wrdCntr++;
@@ -278,4 +278,3 @@ int main(int argc, char** argv) {
     MPI_Finalize();
     return 0;
 }
-
