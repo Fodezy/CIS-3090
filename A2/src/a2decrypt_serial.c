@@ -21,10 +21,17 @@ void swap(char *x, char *y) {
     *y = temp;
 }
 
-void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS]) {
+int strCompare(const void *a, const void *b) {
+    const char *const *wordA = (const char *const*)a;
+    const char *const *wordB = (const char *const*)b;
+
+    return strcmp(*wordA, *wordB);
+}
+
+void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS], int wrdCntr) {
     int i; 
     if(l == r) {
-        printf("permutation: %s\n", permuteWord);
+        // printf("permutation: %s\n", permuteWord);
 
         // create mapping
         char mapping[ALPHABET_SIZE] = {0};
@@ -32,15 +39,15 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
 
         for(int i = 0; i < wordLen; i++) {
             mapping[decryptWord[i] - 97] = permuteWord[i];
-            printf("mapping[%c - 97] = %c\n", decryptWord[i], permuteWord[i]);
+            // printf("mapping[%c - 97] = %c\n", decryptWord[i], permuteWord[i]);
         }
 
         // create decryption with cipherString  
         char possibleWord[MAX_STRING_SIZE] = {0}; 
         int chrCntr = 0;
 
-        printf("String length: %lu\n", strlen(cipherString));
-        printf("STring is: %s\n", cipherString);
+        // printf("String length: %lu\n", strlen(cipherString));
+        // printf("STring is: %s\n", cipherString);
         for(int i = 0; i < strlen(cipherString); i++) {
             char c = tolower(cipherString[i]);
             // cases base: normal char, case 1: space or newline, case 2: non alpha char / something out of usualy and i just need to perserve - could combine case 1 & 2 but i'll keep seperate for now for debugging
@@ -57,7 +64,7 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
         }
 
         possibleWord[chrCntr] = '\0';
-        printf("Possible decrypted word: %slength is: %d\n", possibleWord, chrCntr);
+        // printf("Possible decrypted word: %slength is: %d\n", possibleWord, chrCntr);
 
         // need to now use binary search to check for each word within the dict 
 
@@ -65,34 +72,42 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
         strcpy(tempString, possibleWord);
 
         // if string is multi words, need to split and check each word on its own 
-        char *wordToken = strtok(tempString, " ");
+        char *wordToken = strtok(tempString, " ");      
+
+        int wordsPossible = 0;
+        int foundWords = 0;
         while(wordToken != NULL) {
-            printf("Word to check: %s\n", wordToken);
+            wordToken[strcspn(wordToken, "\n\r")] = '\0'; // remove newline & carriage return if present
+            if(strlen(wordToken) > 0) {
+                wordsPossible++;
+            
+            
+                char *key = wordToken;
+                char **item = (char**) bsearch(&key, dict, wrdCntr, sizeof(char *), strCompare);
+                if (item != NULL) {
+                // printf("word '%s' is found\n", wordToken);
+                    foundWords++;
+                }
+            }
+
             // need to do bsearch here 
             // need to create a flag, such that each word checked must be found for it to be a valid decryption 
             wordToken = strtok(NULL, " ");
         }
 
-
-
-
+        if(wordsPossible > 0 && wordsPossible == foundWords) {
+            printf("Valid decryption found: %s\n", possibleWord);
+        }
         
         // this is where i would do the dict check 
     } else {
         for(int i = l; i <= r; i++) {
             swap((permuteWord  + l), (permuteWord + i));
-            permute(cipherString, decryptWord, permuteWord, l + 1, r, dict);
+            permute(cipherString, decryptWord, permuteWord, l + 1, r, dict, wrdCntr);
 
             swap((permuteWord + l), (permuteWord + i)); 
         }
     }
-}
-
-int strCompare(const void *a, const void *b) {
-    const char *wordA = *(char**)a;
-    const char *wordB = *(char**)b;
-
-    return strcmp(wordA, wordB);
 }
 
 
@@ -161,7 +176,7 @@ int main(int argc, char** argv) {
 
     char word[MAX_STRING_SIZE];
     while(fgets(word, MAX_STRING_SIZE, fDictIn)) {
-        word[strcspn(word, "\n")] = '\0';  // remove any newline from a word when reading in from the dict 
+        word[strcspn(word, "\n\r")] = '\0';  // remove any newline from a word when reading in from the dict 
         dict[wrdCntr] = strdup(word);
         wrdCntr++;
     }
@@ -176,18 +191,30 @@ int main(int argc, char** argv) {
             dict[i][j] = tolower(dict[i][j]);
         }
     }
+
+    // for(int i = 0; i < wrdCntr; i++) {
+    //     if(strcmp("hello", dict[i]) == 0) {
+    //         printf("Found hello in dict at index %d\n", i);
+    //     } else {
+    //         // printf("Not found hello at index \n", i);
+    //     }
+    // }
     
     // use q sort to sort the dict  
     // refrence for qsort usage: https://stackoverflow.com/questions/23189630/how-to-use-qsort-for-an-array-of-strings
+    
     qsort(dict, wrdCntr, sizeof(char *), strCompare); 
 
     // need to do the permuations now then the compare 
 
     //use binary search when doing checks to speed up look up time 
     // we dont want to modify the original decrypt dict so I made a copy early used within the permutes that can be used to check against the dict
+    
     int n = strlen(permuteDecyptDict);
+
     // refrence for permute usage: https://www.geeksforgeeks.org/c/c-program-to-print-all-permutations-of-a-given-string/
-    permute(cipherString, decryptDict, permuteDecyptDict, 0, n - 1, dict);
+    
+    permute(cipherString, decryptDict, permuteDecyptDict, 0, n - 1, dict, wrdCntr);
 
     // the above will do the following, for each permutation: it will check each word within the dictionary using binary search (bsearch) 
     //if a word is found it will store it into memory, then countinue untill all permutations have been checked. 
