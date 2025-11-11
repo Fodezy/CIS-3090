@@ -202,13 +202,6 @@ int main(int argc, char** argv) {
 
     int inputDictLen = strlen(inputDict);
 
-    // debug: check if we have enough processes for the number of unique letters
-    if(size < inputDictLen) {
-        if(rank == 0) {
-            fprintf(stderr, "Warning: Need at least %d processes, but only %d available. Some processes will be idle.\n", inputDictLen, size);
-        }
-    }
-
     // each process only works if its rank is less than the number of unique letters; else the process has nothing to do
     if(rank >= inputDictLen) {
         MPI_Finalize();
@@ -245,29 +238,35 @@ int main(int argc, char** argv) {
         }
     }
     
-    // use q sort to sort the dict  
+    // use q sort to sort the dict
     // refrence for qsort usage: https://stackoverflow.com/questions/23189630/how-to-use-qsort-for-an-array-of-strings
     qsort(dict, wrdCntr, sizeof(char *), strCompare); 
 
     // create decryption dict copy to permute
     char decryptDict[ALPHABET_SIZE];
-    strcpy(decryptDict, inputDict);
+    int n = inputDictLen;
 
-    // swap the first letter with the letter at position 'rank'
-    // this ensures each process tests permutations starting with a different letter
-    swap(&decryptDict[0], &decryptDict[rank]);
+    // When we have fewer processes than unique letters, each process must handle multiple starting letters
+    // Process with rank 'r' handles starting letters at positions: r, r+size, r+2*size, ...
+    for(int startLetterIdx = rank; startLetterIdx < inputDictLen; startLetterIdx += size) {
+        // Reset decryptDict to original inputDict for each starting letter
+        strcpy(decryptDict, inputDict);
+        
+        // swap the first letter with the letter at position 'startLetterIdx'
+        // this ensures we test permutations starting with this letter
+        swap(&decryptDict[0], &decryptDict[startLetterIdx]);
 
-    // need to do the permuations now then the compare 
-    //use binary search when doing checks to speed up look up time
-    int n = strlen(decryptDict);
-    if(n > 1) {
-        permuteWithFirstLetter(decryptDict, 1, n - 1, cipherString, inputDict, dict, wrdCntr, rank);
-    } else {
-        // only one letter, just test it directly
-        char decryptedText[MAX_STRING_SIZE];
-        decryptString(cipherString, inputDict, decryptDict, decryptedText);
-        if(validateDecryption(decryptedText, dict, wrdCntr)) {
-            printf("rank %d: %s\n", rank, decryptedText);
+        // need to do the permuations now then the compare 
+        //use binary search when doing checks to speed up look up time
+        if(n > 1) {
+            permuteWithFirstLetter(decryptDict, 1, n - 1, cipherString, inputDict, dict, wrdCntr, rank);
+        } else {
+            // only one letter, just test it directly
+            char decryptedText[MAX_STRING_SIZE];
+            decryptString(cipherString, inputDict, decryptDict, decryptedText);
+            if(validateDecryption(decryptedText, dict, wrdCntr)) {
+                printf("rank %d: %s\n", rank, decryptedText);
+            }
         }
     }
 
