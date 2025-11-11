@@ -1,4 +1,4 @@
-all: a2encrypt a2decrypt_serial
+all: a2encrypt a2decrypt_serial a2decrypt
 
 a2encrypt: src/a2encrypt.c
 	mpicc src/a2encrypt.c -o a2encrypt
@@ -6,18 +6,8 @@ a2encrypt: src/a2encrypt.c
 a2decrypt_serial: src/a2decrypt_serial.c
 	mpicc src/a2decrypt_serial.c -o a2decrypt_serial
 
+a2decrypt: src/a2decrypt.c
+	mpicc src/a2decrypt.c -o a2decrypt
+
 clean: 
-	rm a2encrypt a2decrypt_serial
-
-
-# all: a2encrypt a2decrypt_serial
-
-# a2encrypt: src/a2encrypt.c
-	
-# 	gcc src/a2encrypt.c -o a2encrypt.exe
-
-# a2decrypt_serial: src/a2decrypt_serial.c
-# 	gcc src/a2decrypt_serial.c -o a2decrypt_serial.exe
-
-# clean: 
-# 	del a2encrypt.exe a2decrypt_serial.exe a2encrypt a2decrypt_serial
+	rm a2encrypt a2decrypt_serial a2decrypt ciphertext.txt
