@@ -10,4 +10,4 @@ a2decrypt: src/a2decrypt.c
 	mpicc src/a2decrypt.c -o a2decrypt
 
 clean: 
-	rm a2encrypt a2decrypt_serial a2decrypt ciphertext.txt
+	rm -f a2encrypt a2decrypt_serial a2decrypt ciphertext.txt
