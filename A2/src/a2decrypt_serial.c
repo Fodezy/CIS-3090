@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
     // --> test each permuation against the american english txt file provided as an array would become way to lare 
     // --> store each valid decryption found into an array 
 
-    if(argc > 3 && argc < 2) {
+    if(argc != 3) {
         fprintf(stderr, "Error with input args, please use the following format: ./a2decrypt_serial <ciphertext file> <dictionary file>\n");
         return 0;
     }
