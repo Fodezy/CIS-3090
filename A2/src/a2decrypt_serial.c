@@ -20,10 +20,12 @@ void swap(char *x, char *y) {
     *y = temp;
 }
 
-void permute(char *decryptWord, char *permuteWord, int l, int r) {
+void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r) {
     int i; 
     if(l == r) {
         printf("permutation: %s\n", permuteWord);
+
+        // create mapping
         char mapping[ALPHABET_SIZE] = {0};
         int wordLen = strlen(decryptWord);
 
@@ -31,12 +33,39 @@ void permute(char *decryptWord, char *permuteWord, int l, int r) {
             mapping[decryptWord[i] - 97] = permuteWord[i];
             printf("mapping[%c - 97] = %c\n", decryptWord[i], permuteWord[i]);
         }
+
+        // create decryption with cipherString  
+        char possibleWord[MAX_STRING_SIZE] = {0}; 
+        int chrCntr = 0;
+
+        printf("String length: %lu\n", strlen(cipherString));
+        printf("STring is: %s\n", cipherString);
+        for(int i = 0; i < strlen(cipherString); i++) {
+            char c = tolower(cipherString[i]);
+            // cases base: normal char, case 1: space or newline, case 2: non alpha char / something out of usualy and i just need to perserve - could combine case 1 & 2 but i'll keep seperate for now for debugging
+            if(isalpha(c)) {
+                possibleWord[chrCntr] = mapping[c - 97];
+                chrCntr++;
+            } else if(c == ' ' || c == '\n') {
+                possibleWord[chrCntr] = c;
+                chrCntr++;
+            } else {
+                possibleWord[chrCntr] = c;
+                chrCntr++;
+            }
+        }
+
+        possibleWord[chrCntr] = '\0';
+        printf("Possible decrypted word: %slength is: %d\n", possibleWord, chrCntr);
+
+
+
         
         // this is where i would do the dict check 
     } else {
         for(int i = l; i <= r; i++) {
             swap((permuteWord  + l), (permuteWord + i));
-            permute(decryptWord, permuteWord, l + 1, r);
+            permute(cipherString, decryptWord, permuteWord, l + 1, r);
 
             swap((permuteWord + l), (permuteWord + i)); 
         }
@@ -142,7 +171,7 @@ int main(int argc, char** argv) {
     // we dont want to modify the original decrypt dict so I made a copy early used within the permutes that can be used to check against the dict
     int n = strlen(permuteDecyptDict);
     // refrence for permute usage: https://www.geeksforgeeks.org/c/c-program-to-print-all-permutations-of-a-given-string/
-    permute(decryptDict, permuteDecyptDict, 0, n - 1);
+    permute( cipherString, decryptDict, permuteDecyptDict, 0, n - 1);
 
     // the above will do the following, for each permutation: it will check each word within the dictionary using binary search (bsearch) 
     //if a word is found it will store it into memory, then countinue untill all permutations have been checked. 
