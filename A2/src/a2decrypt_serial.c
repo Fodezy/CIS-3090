@@ -9,6 +9,7 @@
 #define MAX_STRING_SIZE 256
 #define ALPHABET_SIZE 26
 
+// dont think I need (maybe later )
 bool isWordInDict() {
     bool isFound = false;
 }
@@ -20,7 +21,7 @@ void swap(char *x, char *y) {
     *y = temp;
 }
 
-void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r) {
+void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS]) {
     int i; 
     if(l == r) {
         printf("permutation: %s\n", permuteWord);
@@ -58,6 +59,21 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
         possibleWord[chrCntr] = '\0';
         printf("Possible decrypted word: %slength is: %d\n", possibleWord, chrCntr);
 
+        // need to now use binary search to check for each word within the dict 
+
+        char tempString[MAX_STRING_SIZE] = {0};
+        strcpy(tempString, possibleWord);
+
+        // if string is multi words, need to split and check each word on its own 
+        char *wordToken = strtok(tempString, " ");
+        while(wordToken != NULL) {
+            printf("Word to check: %s\n", wordToken);
+            // need to do bsearch here 
+            // need to create a flag, such that each word checked must be found for it to be a valid decryption 
+            wordToken = strtok(NULL, " ");
+        }
+
+
 
 
         
@@ -65,7 +81,7 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
     } else {
         for(int i = l; i <= r; i++) {
             swap((permuteWord  + l), (permuteWord + i));
-            permute(cipherString, decryptWord, permuteWord, l + 1, r);
+            permute(cipherString, decryptWord, permuteWord, l + 1, r, dict);
 
             swap((permuteWord + l), (permuteWord + i)); 
         }
@@ -171,7 +187,7 @@ int main(int argc, char** argv) {
     // we dont want to modify the original decrypt dict so I made a copy early used within the permutes that can be used to check against the dict
     int n = strlen(permuteDecyptDict);
     // refrence for permute usage: https://www.geeksforgeeks.org/c/c-program-to-print-all-permutations-of-a-given-string/
-    permute( cipherString, decryptDict, permuteDecyptDict, 0, n - 1);
+    permute(cipherString, decryptDict, permuteDecyptDict, 0, n - 1, dict);
 
     // the above will do the following, for each permutation: it will check each word within the dictionary using binary search (bsearch) 
     //if a word is found it will store it into memory, then countinue untill all permutations have been checked. 
