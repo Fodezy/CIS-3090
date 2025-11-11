@@ -9,6 +9,10 @@
 #define MAX_STRING_SIZE 256
 #define ALPHABET_SIZE 26
 
+bool isWordInDict() {
+    bool isFound = false;
+}
+
 void swap(char *x, char *y) {
     char temp;
     temp = *x;
@@ -20,6 +24,8 @@ void permute(char *word, int l, int r) {
     int i; 
     if(l == r) {
         printf("permutation: %s\n", word);
+
+        
         // this is where i would do the dict check 
     } else {
         for(int i = l; i <= r; i++) {
@@ -32,10 +38,10 @@ void permute(char *word, int l, int r) {
 }
 
 int strCompare(const void *a, const void *b) {
-    char *const *wordA = a;
-    char *const *wordB = b;
+    const char *wordA = *(char**)a;
+    const char *wordB = *(char**)b;
 
-    return strcmp(*wordA, *wordB);
+    return strcmp(wordA, wordB);
 }
 
 
@@ -49,7 +55,7 @@ int main(int argc, char** argv) {
 
     if(argc != 3) {
         fprintf(stderr, "Error with input args, please use the following format: ./a2decrypt_serial <ciphertext file> <dictionary file>\n");
-        return 0;
+        return 1;
     }
 
     FILE *fCipherIn = fopen(argv[1], "r");
@@ -61,13 +67,18 @@ int main(int argc, char** argv) {
     char cipherString[MAX_STRING_SIZE];
     cipherString[0]= '\0';
 
-    fgets(cipherString, MAX_STRING_SIZE, fCipherIn); 
+    if(!fgets(cipherString, MAX_STRING_SIZE, fCipherIn)) {  // use fgets and check for failure
+        fprintf(stderr, "Error using fgets, reading cipher string failed\n");
+        fclose(fCipherIn);
+        return 1;
+    } 
     fclose(fCipherIn);
 
     printf("Ciphertext read from file: %s\n", cipherString);
 
     int dictCntr = 0; 
     char decryptDict[ALPHABET_SIZE] = {0}; // can only ever have 26 unique chars in the dict
+
     for(int i = 0; i < strlen(cipherString);i++) {
         char c = tolower(cipherString[i]);
         if(c == ' ' || c == '\n' || isalpha(c) == 0) {
@@ -79,9 +90,13 @@ int main(int argc, char** argv) {
             dictCntr++;
         }
     }
-
     decryptDict[dictCntr] = '\0'; 
     printf("Decryption dict (unique chars from cipher): %s\n", decryptDict);
+
+    char permuteDecyptDict[ALPHABET_SIZE] = {0};
+    strcpy(permuteDecyptDict, decryptDict);
+
+    printf("Permutation copied Decryption dict (unique chars from cipher): %s\n", decryptDict);
 
     // need to load the word list now - should move this up higher though before this loop 
     FILE *fDictIn = fopen(argv[2], "r");
@@ -95,8 +110,7 @@ int main(int argc, char** argv) {
 
     char word[MAX_STRING_SIZE];
     while(fgets(word, MAX_STRING_SIZE, fDictIn)) {
-        // word[strcspn(word, "\n")] = '\0';
-
+        word[strcspn(word, "\n")] = '\0';  // remove any newline from a word when reading in from the dict 
         dict[wrdCntr] = strdup(word);
         wrdCntr++;
     }
@@ -119,10 +133,30 @@ int main(int argc, char** argv) {
     // need to do the permuations now then the compare 
 
     //use binary search when doing checks to speed up look up time 
-
-    int n = strlen(decryptDict);
+    // we dont want to modify the original decrypt dict so I made a copy early used within the permutes that can be used to check against the dict
+    int n = strlen(permuteDecyptDict);
     // refrence for permute usage: https://www.geeksforgeeks.org/c/c-program-to-print-all-permutations-of-a-given-string/
-    permute(decryptDict, 0, n - 1);
+    permute(permuteDecyptDict, 0, n - 1);
+
+    // the above will do the following, for each permutation: it will check each word within the dictionary using binary search (bsearch) 
+    //if a word is found it will store it into memory, then countinue untill all permutations have been checked. 
+    // to be able to check if a permutatio is valid we need to first decrypt the cipher string using the current permuations as the decryption dict 
+    // this invloves doing the reverse of the encryption process done in the previous file 
+
+    // need to create a mapping decrypt (unchanging ever) dict to permuteDcryptDict (changes per permuation)
+
+    // example: decryptDict = achet
+    //   permuteDictDecrypt = caeht
+    // mapping would looke like: a -> c, c -> a, h -> e, ignore space, e -> h, t-> t, (duplicate ignore: but a -> c)
+    // so it become: cae htc --> which is not a word in the dict 
+
+    // to do this mapping I can do the following -> create an array of size 26 (each letter of alphabet)
+    // index each position of the map to the decrpytDict: ie map[decryptDict[i]] --> however this becomes out of bounds as lowercase char values range from 97 to 122 (a-z) so we need to offset by base of 97
+    // therefore for mapping it needs to be map[decryptDict[i] - 97] --> range will now always be within 0 - 25
+    // can set this map to be equal to the permuteDictDecrypt char at the same index:  map[decryptDict[i] - 97] = permuteDictDecrypt[i];
+
+    // after I have this mapping i can do the reverse of the encryption section of a2encrypt to dcrypt the cipher, look up in dict, and store in mem 
+
     
 
 
