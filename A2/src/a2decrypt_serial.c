@@ -9,11 +9,6 @@
 #define MAX_STRING_SIZE 256
 #define ALPHABET_SIZE 26
 
-// dont think I need (maybe later )
-bool isWordInDict() {
-    bool isFound = false;
-}
-
 void swap(char *x, char *y) {
     char temp;
     temp = *x;
@@ -28,8 +23,7 @@ int strCompare(const void *a, const void *b) {
     return strcmp(wordA, wordB);
 }
 
-void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS], int wrdCntr) {
-    int i; 
+void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS], int wrdCntr) { 
     if(l == r) {
         // printf("permutation: %s\n", permuteWord);
 
@@ -48,7 +42,9 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
 
         // printf("String length: %lu\n", strlen(cipherString));
         // printf("STring is: %s\n", cipherString);
-        for(int i = 0; i < strlen(cipherString); i++) {
+
+        // i get warning from the compiler if i dont use size_t
+        for(size_t i = 0; i < strlen(cipherString); i++) {
             char c = tolower(cipherString[i]);
             // cases base: normal char, case 1: space or newline, case 2: non alpha char / something out of usualy and i just need to perserve - could combine case 1 & 2 but i'll keep seperate for now for debugging
             if(isalpha(c)) {
@@ -145,7 +141,7 @@ int main(int argc, char** argv) {
     int dictCntr = 0; 
     char decryptDict[ALPHABET_SIZE] = {0}; // can only ever have 26 unique chars in the dict
 
-    for(int i = 0; i < strlen(cipherString);i++) {
+    for(size_t i = 0; i < strlen(cipherString);i++) {
         char c = tolower(cipherString[i]);
         if(c == ' ' || c == '\n' || isalpha(c) == 0) {
             continue;

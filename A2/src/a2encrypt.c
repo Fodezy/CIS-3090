@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
 
     int dictCntr = 0;
     char inputDict[ALPHABET_SIZE] = {0}; // can only ever have 26 unique chars in the dict 
-    for(int i = 0; i < strlen(inputString); i++) {
+    for(size_t i = 0; i < strlen(inputString); i++) {
         char c = tolower(inputString[i]); 
 
         // steps for 3
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
     char cipherString[MAX_STRING_SIZE] = {0};
     int cipherCntr = 0;
 
-    for(int i = 0; i < strlen(inputString); i++) {
+    for(size_t i = 0; i < strlen(inputString); i++) {
         char c = tolower(inputString[i]);
         // used to keep if the char is a space or non alpha char 
         if(isalpha(c) == 0) {
@@ -126,7 +126,7 @@ int main(int argc, char** argv) {
         }
 
         int index = -1;
-        for(int j = 0; j < strlen(inputDict); j++) {
+        for(size_t j = 0; j < strlen(inputDict); j++) {
             if(inputDict[j] == c) {
                 index = j;
                 break;

@@ -20,6 +20,13 @@ void swap(char *x, char *y) {
     *y = temp;
 }
 
+int strCompare(const void *a, const void *b) {
+    const char *wordA = *(char**)a;
+    const char *wordB = *(char**)b;
+
+    return strcmp(wordA, wordB);
+}
+
 void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS], int wrdCntr, int rank) {
     if(l == r) {
         // create mapping
@@ -92,13 +99,6 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
             swap((permuteWord + l), (permuteWord + i)); 
         }
     }
-}
-
-int strCompare(const void *a, const void *b) {
-    const char *const *wordA = (const char *const*)a;
-    const char *const *wordB = (const char *const*)b;
-
-    return strcmp(*wordA, *wordB);
 }
 
 int main(int argc, char** argv) {
