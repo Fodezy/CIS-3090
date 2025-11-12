@@ -22,10 +22,10 @@ void swap(char *x, char *y) {
 }
 
 int strCompare(const void *a, const void *b) {
-    const char *const *wordA = (const char *const*)a;
-    const char *const *wordB = (const char *const*)b;
+    const char *wordA = *(char**)a;
+    const char *wordB = *(char**)b;
 
-    return strcmp(*wordA, *wordB);
+    return strcmp(wordA, wordB);
 }
 
 void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS], int wrdCntr) {
@@ -85,7 +85,7 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
                 char *key = wordToken;
                 char **item = (char**) bsearch(&key, dict, wrdCntr, sizeof(char *), strCompare);
                 if (item != NULL) {
-                // printf("word '%s' is found\n", wordToken);
+                    // printf("word '%s' is found\n", wordToken);
                     foundWords++;
                 }
             }
