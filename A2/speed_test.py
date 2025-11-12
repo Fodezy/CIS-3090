@@ -14,7 +14,7 @@ DICT = "american-english"
 TEST_DIR = "test_inputs"
 NUM_RUNS = 30
 OUTPUT_DIR = "performance_results"
-MAX_CHARS = 14  # upper bound for test files like test_3chars.txt ... test_14chars.txt
+MAX_CHARS = 14  # the number of unique characters to test up to
 
 
 def time_run(executable, arguments):
@@ -138,7 +138,7 @@ def main():
     print("Starting performance tests...")
     print()
 
-    # Loop over expected test files test_3chars.txt ... test_MAXchars.txt
+    # Loop over test files
     for num_chars in range(3, MAX_CHARS + 1):
         test_file = os.path.join(TEST_DIR, f"test_{num_chars}chars.txt")
         if os.path.exists(test_file):

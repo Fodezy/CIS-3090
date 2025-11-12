@@ -40,9 +40,6 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
         char possibleWord[MAX_STRING_SIZE] = {0}; 
         int chrCntr = 0;
 
-        // printf("String length: %lu\n", strlen(cipherString));
-        // printf("STring is: %s\n", cipherString);
-
         // i get warning from the compiler if i dont use size_t
         for(size_t i = 0; i < strlen(cipherString); i++) {
             char c = tolower(cipherString[i]);
@@ -81,7 +78,6 @@ void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, in
                 char *key = wordToken;
                 char **item = (char**) bsearch(&key, dict, wrdCntr, sizeof(char *), strCompare);
                 if (item != NULL) {
-                    // printf("word '%s' is found\n", wordToken);
                     foundWords++;
                 }
             }
