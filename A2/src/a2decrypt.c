@@ -20,124 +20,83 @@ void swap(char *x, char *y) {
     *y = temp;
 }
 
-// binary search function to check if a word exists in the dictionary
-// reference for binary search: https://www.geeksforgeeks.org/binary-search/
-int binarySearch(char **dict, int left, int right, char *target) {
-    while(left <= right) {
-        int mid = left + (right - left) / 2;
-        
-        // remove newline from dict word for comparison
-        char dictWord[MAX_STRING_SIZE];
-        strcpy(dictWord, dict[mid]);
-        dictWord[strcspn(dictWord, "\n")] = '\0';
-        
-        int cmp = strcmp(target, dictWord);
-        
-        if(cmp == 0) {
-            return 1; // word found
-        }
-        if(cmp < 0) {
-            right = mid - 1;
-        } else {
-            left = mid + 1;
-        }
-    }
-    return 0; // word not found
-}
+void permute(char *cipherString, char *decryptWord, char *permuteWord, int l, int r, char *dict[MAX_WORDS], int wrdCntr, int rank) {
+    if(l == r) {
+        // create mapping
+        char mapping[ALPHABET_SIZE] = {0};
+        int wordLen = strlen(decryptWord);
 
-// function to decrypt ciphertext using input dict and decryption dict
-// this is where I decrypt the string using the two dictionaries
-void decryptString(char *ciphertext, char *inputDict, char *decryptDict, char *result) {
-    int resultIdx = 0;
-    for(int i = 0; i < strlen(ciphertext); i++) {
-        char c = tolower(ciphertext[i]);
-        
-        // keep spaces and newlines as is
-        if(c == ' ' || c == '\n') {
-            result[resultIdx] = c;
-            resultIdx++;
-            continue;
+        for(int i = 0; i < wordLen; i++) {
+            mapping[decryptWord[i] - 97] = permuteWord[i];
         }
-        
-        // if not alphabetic, skip
-        if(!isalpha(c)) {
-            continue;
-        }
-        
-        // find position of char in input dict
-        int index = -1;
-        for(int j = 0; j < strlen(inputDict); j++) {
-            if(inputDict[j] == c) {
-                index = j;
-                break;
+
+        // create decryption with cipherString  
+        char possibleWord[MAX_STRING_SIZE] = {0}; 
+        int chrCntr = 0;
+
+        for(int i = 0; i < strlen(cipherString); i++) {
+            char c = tolower(cipherString[i]);
+            // cases base: normal char, case 1: space or newline, case 2: non alpha char / something out of usualy and i just need to perserve - could combine case 1 & 2 but i'll keep seperate for now for debugging
+            if(isalpha(c)) {
+                possibleWord[chrCntr] = mapping[c - 97];
+                chrCntr++;
+            } else if(c == ' ' || c == '\n') {
+                possibleWord[chrCntr] = c;
+                chrCntr++;
+            } else {
+                possibleWord[chrCntr] = c;
+                chrCntr++;
             }
         }
-        
-        // use that position in decrypt dict to get decrypted char
-        if(index != -1 && index < strlen(decryptDict)) {
-            result[resultIdx] = decryptDict[index];
-            resultIdx++;
-        }
-    }
-    result[resultIdx] = '\0';
-}
 
-// function to validate if all words in decrypted string are in dictionary
-// this is where I check if all words are valid english words
-int validateDecryption(char *decryptedText, char **dict, int dictSize) {
-    char textCopy[MAX_STRING_SIZE];
-    strcpy(textCopy, decryptedText);
-    
-    // split by spaces and check each word
-    char *token = strtok(textCopy, " \n");
-    while(token != NULL) {
-        // remove any trailing newline or whitespace
-        char word[MAX_STRING_SIZE];
-        strcpy(word, token);
-        word[strcspn(word, "\n")] = '\0';
-        
-        // skip empty words
-        if(strlen(word) == 0) {
-            token = strtok(NULL, " \n");
-            continue;
-        }
-        
-        // check if word is in dictionary using binary search
-        if(binarySearch(dict, 0, dictSize - 1, word) == 0) {
-            return 0; // word not found in dictionary
-        }
-        
-        token = strtok(NULL, " \n");
-    }
-    
-    return 1; // all words found in dictionary
-}
+        possibleWord[chrCntr] = '\0';
 
-// function to permute and test decryption dictionaries
-// this function tests all permutations starting with a fixed first letter
-void permuteWithFirstLetter(char *decryptDict, int l, int r, char *ciphertext, char *inputDict, char **dictionary, int dictSize, int rank) {
-    if(l == r) {
-        // this is where I would do the dict check 
-        char decryptedText[MAX_STRING_SIZE];
-        decryptString(ciphertext, inputDict, decryptDict, decryptedText);
-        
-        // validate the decrypted text
-        if(validateDecryption(decryptedText, dictionary, dictSize)) {
-            // print valid result with rank
-            printf("rank %d: %s\n", rank, decryptedText);
+        // need to now use binary search to check for each word within the dict 
+
+        char tempString[MAX_STRING_SIZE] = {0};
+        strcpy(tempString, possibleWord);
+
+        // if string is multi words, need to split and check each word on its own 
+        char *wordToken = strtok(tempString, " ");      
+
+        int wordsPossible = 0;
+        int foundWords = 0;
+        while(wordToken != NULL) {
+            wordToken[strcspn(wordToken, "\n\r")] = '\0'; // remove newline & carriage return if present
+            if(strlen(wordToken) > 0) {
+                wordsPossible++;
+            
+            
+                char *key = wordToken;
+                char **item = (char**) bsearch(&key, dict, wrdCntr, sizeof(char *), strCompare);
+                if (item != NULL) {
+                    foundWords++;
+                }
+            }
+
+            // need to do bsearch here 
+            // need to create a flag, such that each word checked must be found for it to be a valid decryption 
+            wordToken = strtok(NULL, " ");
         }
+
+        if(wordsPossible > 0 && wordsPossible == foundWords) {
+            printf("rank %d: %s\n", rank, possibleWord);
+        }
+        
+        // this is where i would do the dict check 
     } else {
         for(int i = l; i <= r; i++) {
-            swap((decryptDict + l), (decryptDict + i));
-            permuteWithFirstLetter(decryptDict, l + 1, r, ciphertext, inputDict, dictionary, dictSize, rank);
-            swap((decryptDict + l), (decryptDict + i)); // backtrack
+            swap((permuteWord  + l), (permuteWord + i));
+            permute(cipherString, decryptWord, permuteWord, l + 1, r, dict, wrdCntr, rank);
+
+            swap((permuteWord + l), (permuteWord + i)); 
         }
     }
 }
 
 int strCompare(const void *a, const void *b) {
-    char *const *wordA = a;
-    char *const *wordB = b;
+    const char *const *wordA = (const char *const*)a;
+    const char *const *wordB = (const char *const*)b;
 
     return strcmp(*wordA, *wordB);
 }
@@ -164,24 +123,35 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    // all processes read the ciphertext file
-    FILE *fCipherIn = fopen(argv[1], "r");
-    if(fCipherIn == NULL) {
-        if(rank == 0) {
+    // Only rank 0 reads the ciphertext file, then broadcasts it to all processes
+    char cipherString[MAX_STRING_SIZE];
+    cipherString[0] = '\0';
+    int cipherLen = 0;
+
+    if(rank == 0) {
+        FILE *fCipherIn = fopen(argv[1], "r");
+        if(fCipherIn == NULL) {
             perror("fopen");
+            MPI_Finalize();
+            return 1;
         }
-        MPI_Finalize();
-        return 1;
+
+        if(fgets(cipherString, MAX_STRING_SIZE, fCipherIn) == NULL) {
+            fprintf(stderr, "Error: Failed to read ciphertext\n");
+            fclose(fCipherIn);
+            MPI_Finalize();
+            return 1;
+        }
+        fclose(fCipherIn);
+
+        // remove newline from ciphertext if present
+        cipherString[strcspn(cipherString, "\n")] = '\0';
+        cipherLen = strlen(cipherString) + 1; // +1 for null terminator
     }
 
-    char cipherString[MAX_STRING_SIZE];
-    cipherString[0]= '\0';
-
-    fgets(cipherString, MAX_STRING_SIZE, fCipherIn); 
-    fclose(fCipherIn);
-
-    // remove newline from ciphertext if present
-    cipherString[strcspn(cipherString, "\n")] = '\0';
+    // Broadcast ciphertext length and content to all processes
+    MPI_Bcast(&cipherLen, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(cipherString, cipherLen, MPI_CHAR, 0, MPI_COMM_WORLD);
 
     // create input dictionary
     int dictCntr = 0; 
@@ -208,65 +178,92 @@ int main(int argc, char** argv) {
         return 0;
     }
 
-    // need to load the word list now - should move this up higher though before this loop  
-    FILE *fDictIn = fopen(argv[2], "r");
-    if(fDictIn == NULL) {
-        if(rank == 0) {
-            perror("fopen");
-        }
-        MPI_Finalize();
-        return 1;
-    }
-
+    // Only rank 0 reads the dictionary, then broadcasts it to all processes
     char *dict[MAX_WORDS];
     int wrdCntr = 0;
 
-    char word[MAX_STRING_SIZE];
-    while(fgets(word, MAX_STRING_SIZE, fDictIn)) {
-        word[strcspn(word, "\n\r")] = '\0';
+    if(rank == 0) {
+        // Rank 0 reads the dictionary file
+        FILE *fDictIn = fopen(argv[2], "r");
+        if(fDictIn == NULL) {
+            perror("fopen");
+            MPI_Finalize();
+            return 1;
+        }
 
-        dict[wrdCntr] = strdup(word);
-        wrdCntr++;
+        char word[MAX_STRING_SIZE];
+        while(fgets(word, MAX_STRING_SIZE, fDictIn) && wrdCntr < MAX_WORDS) {
+            word[strcspn(word, "\n\r")] = '\0';
+
+            dict[wrdCntr] = strdup(word);
+            wrdCntr++;
+        }
+
+        fclose(fDictIn);
+
+        // make all words in dict lower case 
+        for(int i = 0; i < wrdCntr; i++) {
+            for(int j = 0; dict[i][j]; j++) {
+                dict[i][j] = tolower(dict[i][j]);
+            }
+        }
+        
+        // use q sort to sort the dict
+        // refrence for qsort usage: https://stackoverflow.com/questions/23189630/how-to-use-qsort-for-an-array-of-strings
+        qsort(dict, wrdCntr, sizeof(char *), strCompare);
     }
 
-    fclose(fDictIn);
+    // Broadcast dictionary size to all processes
+    MPI_Bcast(&wrdCntr, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    // make all words in dict lower case 
+    // Allocate memory for dictionary on all processes
+    // Rank 0 already has memory allocated via strdup, but we need consistent allocation
+    // For simplicity, we'll allocate MAX_STRING_SIZE for each word on all processes
     for(int i = 0; i < wrdCntr; i++) {
-        for(int j = 0; dict[i][j]; j++) {
-            dict[i][j] = tolower(dict[i][j]);
+        if(rank == 0) {
+            // Rank 0: reallocate to ensure consistent size (or keep existing if already correct)
+            // Actually, we can keep the strdup'd memory, just ensure it's at least MAX_STRING_SIZE
+            // For now, let's reallocate to be safe
+            char *oldWord = dict[i];
+            dict[i] = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
+            strncpy(dict[i], oldWord, MAX_STRING_SIZE - 1);
+            dict[i][MAX_STRING_SIZE - 1] = '\0';
+            free(oldWord);
+        } else {
+            // Other ranks: allocate new memory
+            dict[i] = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
         }
     }
-    
-    // use q sort to sort the dict
-    // refrence for qsort usage: https://stackoverflow.com/questions/23189630/how-to-use-qsort-for-an-array-of-strings
-    qsort(dict, wrdCntr, sizeof(char *), strCompare); 
+
+    // Broadcast each word to all processes
+    // Since all words are now allocated to MAX_STRING_SIZE, we can broadcast directly
+    for(int i = 0; i < wrdCntr; i++) {
+        MPI_Bcast(dict[i], MAX_STRING_SIZE, MPI_CHAR, 0, MPI_COMM_WORLD);
+    } 
 
     // create decryption dict copy to permute
-    char decryptDict[ALPHABET_SIZE];
+    char permuteDecyptDict[ALPHABET_SIZE] = {0};
+    strcpy(permuteDecyptDict, inputDict);
+
     int n = inputDictLen;
 
     // When we have fewer processes than unique letters, each process must handle multiple starting letters
     // Process with rank 'r' handles starting letters at positions: r, r+size, r+2*size, ...
     for(int startLetterIdx = rank; startLetterIdx < inputDictLen; startLetterIdx += size) {
-        // Reset decryptDict to original inputDict for each starting letter
-        strcpy(decryptDict, inputDict);
+        // Reset permuteDecyptDict to original inputDict for each starting letter
+        strcpy(permuteDecyptDict, inputDict);
         
         // swap the first letter with the letter at position 'startLetterIdx'
         // this ensures we test permutations starting with this letter
-        swap(&decryptDict[0], &decryptDict[startLetterIdx]);
+        swap(&permuteDecyptDict[0], &permuteDecyptDict[startLetterIdx]);
 
         // need to do the permuations now then the compare 
         //use binary search when doing checks to speed up look up time
         if(n > 1) {
-            permuteWithFirstLetter(decryptDict, 1, n - 1, cipherString, inputDict, dict, wrdCntr, rank);
+            permute(cipherString, inputDict, permuteDecyptDict, 1, n - 1, dict, wrdCntr, rank);
         } else {
             // only one letter, just test it directly
-            char decryptedText[MAX_STRING_SIZE];
-            decryptString(cipherString, inputDict, decryptDict, decryptedText);
-            if(validateDecryption(decryptedText, dict, wrdCntr)) {
-                printf("rank %d: %s\n", rank, decryptedText);
-            }
+            permute(cipherString, inputDict, permuteDecyptDict, 0, n - 1, dict, wrdCntr, rank);
         }
     }
 
