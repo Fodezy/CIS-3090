@@ -214,68 +214,32 @@ int main(int argc, char** argv) {
     }
 
     // Broadcast dictionary size to all processes
-
-    //the changes I made here to were to reduce the amount of bcast calls being sent 
-    // before we had about 120,000 (MAX_WORDS) calls being made, one for each word
-    // I created a buffer instead that stores all words into one giant array 
-    // this lets use send just one bcast call out instead of thousands, reducing overhead cost
-    // this was the issue with why our parallel was running so slowly before 
     MPI_Bcast(&wrdCntr, 1, MPI_INT, 0, MPI_COMM_WORLD);
 
-    int buf_size = (int)wrdCntr * (int)MAX_STRING_SIZE;
-    char *dict_buffer = (char *)malloc(buf_size);
-    if (dict_buffer == NULL) {
-        fprintf(stderr, "Rank %d: failed to allocate dict_buffer\n", rank);
-        MPI_Abort(MPI_COMM_WORLD, 1);
-    }
-
-    // on rank 0, main process we need to remove the old array that stored each word individualy and create the buffer 
-    // this buffer will be using to send the full dict once instead of 120,000 times 
-    // reducing the need to overcall bcast and slow down the decryption due to overhead 
-    if (rank == 0) {
-        for (int i = 0; i < wrdCntr; i++) {
-            // copy word into fixed-size slot
-            strncpy(&dict_buffer[i * MAX_STRING_SIZE], dict[i], MAX_STRING_SIZE - 1);
-            dict_buffer[i * MAX_STRING_SIZE + MAX_STRING_SIZE - 1] = '\0';
-            free(dict[i]);  // free old strdup'd string
-        }
-    }
-
-    // now we only need one bcast call instead of for the length of wrdCntr - saves so much time 
-    MPI_Bcast(dict_buffer, (int)buf_size, MPI_CHAR, 0, MPI_COMM_WORLD);
-
-
-    // rebuild old dict as the permute function, bsearch, qsort rely on it, meaning each rank needs access to this as well 
-    for (int i = 0; i < wrdCntr; i++) {
-        dict[i] = &dict_buffer[i * MAX_STRING_SIZE];
-    }
-
-
-    // this section is way to slow, causes around 120,000 bcast calls (one for each word in dict)
     // Allocate memory for dictionary on all processes
     // Rank 0 already has memory allocated via strdup, but we need consistent allocation
     // For simplicity, we'll allocate MAX_STRING_SIZE for each word on all processes
-    // for(int i = 0; i < wrdCntr; i++) {
-    //     if(rank == 0) {
-    //         // Rank 0: reallocate to ensure consistent size (or keep existing if already correct)
-    //         // Actually, we can keep the strdup'd memory, just ensure it's at least MAX_STRING_SIZE
-    //         // For now, let's reallocate to be safe
-    //         char *oldWord = dict[i];
-    //         dict[i] = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
-    //         strncpy(dict[i], oldWord, MAX_STRING_SIZE - 1);
-    //         dict[i][MAX_STRING_SIZE - 1] = '\0';
-    //         free(oldWord);
-    //     } else {
-    //         // Other ranks: allocate new memory
-    //         dict[i] = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
-    //     }
-    // }
+    for(int i = 0; i < wrdCntr; i++) {
+        if(rank == 0) {
+            // Rank 0: reallocate to ensure consistent size (or keep existing if already correct)
+            // Actually, we can keep the strdup'd memory, just ensure it's at least MAX_STRING_SIZE
+            // For now, let's reallocate to be safe
+            char *oldWord = dict[i];
+            dict[i] = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
+            strncpy(dict[i], oldWord, MAX_STRING_SIZE - 1);
+            dict[i][MAX_STRING_SIZE - 1] = '\0';
+            free(oldWord);
+        } else {
+            // Other ranks: allocate new memory
+            dict[i] = (char *)malloc(MAX_STRING_SIZE * sizeof(char));
+        }
+    }
 
     // Broadcast each word to all processes
     // Since all words are now allocated to MAX_STRING_SIZE, we can broadcast directly
-    // for(int i = 0; i < wrdCntr; i++) {
-    //     MPI_Bcast(dict[i], MAX_STRING_SIZE, MPI_CHAR, 0, MPI_COMM_WORLD);
-    // } 
+    for(int i = 0; i < wrdCntr; i++) {
+        MPI_Bcast(dict[i], MAX_STRING_SIZE, MPI_CHAR, 0, MPI_COMM_WORLD);
+    } 
 
     // create decryption dict copy to permute
     char permuteDecyptDict[ALPHABET_SIZE] = {0};
@@ -303,13 +267,11 @@ int main(int argc, char** argv) {
         }
     }
 
-    free(dict_buffer);
+    // free allocated memory
+    for(int i = 0; i < wrdCntr; i++) {
+        free(dict[i]);
+    }
+
     MPI_Finalize();
     return 0;
-
-    // // free allocated memory
-    // for(int i = 0; i < wrdCntr; i++) {
-    //     free(dict[i]);
-    // }
-
 }
