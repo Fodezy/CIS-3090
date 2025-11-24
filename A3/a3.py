@@ -1,6 +1,7 @@
 import sys 
 import os
 import numpy as np
+import warp as wp
 from PIL import Image
 # print("\n".join(sys.argv))
 
@@ -89,6 +90,7 @@ def processArgs():
 # load image with PIL 
 
 def loadImg():
+    """Returns image numpyarray and mode"""
     image = Image.open(sys.argv[4])
     print(image.mode)
 
@@ -110,13 +112,53 @@ def loadImg():
 
 
 
+def sharpenClosure(N):
+    @wp.kernel
+    def greyScaleSharpen():
+
+    @wp.kernel
+    def colourSharpen():
+
+
+
+
+def algTypeProcessing():
+    def sharpen():
+        """Uses unsharp masking to sharpen the image"""
+
+        # produce edge image: g(x, y) from input image f(x, y)-- > g(x, y) = f(x, y) - S(f(x, y))
+        # where S(f(x, y)) is a blurred version of f(x, y)
+
+        # edge image can be use for sharpening when added back to the original image:
+        # fUM(x, y) = f(x, y) + kg(x, y) 
+        # where k is a scalling constant: reasonable values of k vary between 0.2 and 0.7 (larger values provide increasing amount of sharpening)
+        a = 1 + 1
+
+        # continue
+
+    # def noiseRemoval():
+        # continue
+
 
 
 def main():
     processArgs()
-    arr = loadImg()
+    imageArr, imgMode = loadImg()
 
-    # print(arr)
+    # init warp and set device type
+    wp.init()
+    device = "cpu"
+
+    # get dimension size and set warp data arrays
+    dim = imageArr.shape
+    inWarpImage = wp.array(imageArr, dtype=wp.float32, device=device)
+    outWarpImage = wp.zeros(shape=dm, dtype.wpfloat32, device=device)
+    
+    # print(imageArr.shape)
+
+
+
+
 
 
 if __name__ == "__main__":
