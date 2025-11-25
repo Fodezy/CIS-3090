@@ -130,24 +130,24 @@ def gaussianKernel(l, sig):
     kernel = np.outer(gauss, gauss)
     return kernel / np.sum(kernel)
 
-def create_kernel_denoising_greyScale(gWeights, kernelSize, sigma, shape, device):
+def create_kernel_denoising_greyScale(kernelSize, shape):
 
     height, width = shape 
     radius = kernelSize // 2
-    gWeightsWarp = wp.from_numpy(gWeights.astype(np.float32), dtype=wp.float32, device=device)
 
     @wp.kernel  
-    def denoising_greyScale(inputImage: wp.array(dtype=wp.float32),
-                            outputImage:wp.array(dtype=wp.float32)):
+    def denoising_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2),
+                            outputImage: wp.array(dtype=wp.float32, ndim=2),
+                            gWeightsWarp: wp.array(dtype=wp.float32, ndim=2) ):
         i, j = wp.tid()
-        accum = 0.0
+        smoothedValue = 0.0
 
         for kernel_y in range(kernelSize):
-            for kernel_k in range(kernelSize):
+            for kernel_x in range(kernelSize):
 
                 # handle the pixels withint he k x k radius 
                 offset_i = kernel_y - radius  #computes the offset from the center of the kernel 
-                offset_j = kernel_k - radius 
+                offset_j = kernel_x - radius 
 
                 pixel_i = i + offset_i #computes the position of the pixel within the neigbourhood 
                 pixel_j = j + offset_j 
@@ -155,7 +155,7 @@ def create_kernel_denoising_greyScale(gWeights, kernelSize, sigma, shape, device
                 # handle boarder using the reflection statagy dicsussed in lecutre as it is the recomended approach 
                 # need to handle both possitions pixel_i & pixel_j
 
-                # for pixel_i --> bounds for pixels_i are witin range {0, height} anything outside is a boarder issue and must be refelcted  
+                # height: for pixel_i --> bounds for pixels_i are witin range {0, height} anything outside is a boarder issue and must be refelcted  
                 if pixel_i < 0:
                     pixel_i = -pixel_i
                 elif pixel_i >= height: 
@@ -180,12 +180,25 @@ def create_kernel_denoising_greyScale(gWeights, kernelSize, sigma, shape, device
                     pixel_i = 2 * height - pixel_i - 2 
  
 
+                #width: for pixel_j -> bounds for pixel_j are within the range {0, width}
+                if pixel_j < 0:
+                    pixel_j = -pixel_j
+                elif pixel_j >= width:
+                    pixel_j = 2 * width - pixel_j - 2 # same logic as above but for width boarder issues now 
 
+                # now that we have the pixel positons (adjustments for border issues taken into account) we can get the pixels actually value 
+                imagePixelValue = inputImage[pixel_i, pixel_j]
 
+                # need the gaussian weights as well to figure out the smoothing values 
+                gImageWeights = gWeightsWarp[kernel_y, kernel_x] 
 
-        
+                # Convlution averaging from lecture 12 pg: 14  --> calculating g(x, y) here [gaussian blurred value] for each kernel  
+                smoothedValue += imagePixelValue * gImageWeights
+        outputImage[i, j] = smoothedValue
+
     return denoising_greyScale
 
+            
 
 
 
@@ -208,15 +221,16 @@ def main():
             # Convert this to warp arrays
             inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
             outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+            gWarpWeights = wp.from_numpy(gWeights, dtype=wp.float32, device=device)
             # print(numpyArr.shape)
 
             # create and call closure: args gaussian weights, kernel size, sigma, shape 
-            denoising_kernel = create_kernel_denoising_greyScale(gWeights, kernelSize, k, numpyArr.shape, device)
+            denoising_kernel = create_kernel_denoising_greyScale(kernelSize, numpyArr.shape)
 
             wp.launch(
                 kernel = denoising_kernel,
                 dim = numpyArr.shape,
-                inputs = [inWarpImage, outWarpImage],
+                inputs = [inWarpImage, outWarpImage, gWarpWeights],
                 device=device
             )
 
@@ -226,6 +240,9 @@ def main():
 
 
         # elif imgMode == "RGB":
+    numpyOutArr = outWarpImage.numpy()
+    imageOut = Image.fromarray(np.uint8(numpyOutArr))
+    imageOut.save(outFileName())
 
 
             
