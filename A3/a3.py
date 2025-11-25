@@ -298,12 +298,15 @@ def create_kernel_unsharp_masking_greyScale(kernelSize, shape, k):
 
     @wp.kernel
     def unsharp_masking_blur_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2),
-                                       blurBufferImage: wp.array(dtype=wp.float32, ndim=2)):
+                                       blurBufferImage: wp.array(dtype=wp.float32, ndim=2), 
+                                       gaussianWeightsWarp: wp.array(dtype=wp.float32, ndim=2)):
         """computes S(f(x, y)) --> the blurred image and write it to the output buffer array: blurBufferImage"""
         
         i, j = wp.tid()
+        # blurredValue = 0.0
+        # blurredMean = 0.0
         blurredValue = 0.0
-        blurredMean = 0.0
+        imagePixelValue = 0.0
 
         for kernel_y in range(kernelSize):
             for kernel_x in range(kernelSize):
@@ -328,11 +331,17 @@ def create_kernel_unsharp_masking_greyScale(kernelSize, shape, k):
                     pixel_j = 2 * width - pixel_j - 2
 
                 # calc blurred value from original image 
-                blurredValue += inputImage[pixel_i, pixel_j]
+                # blurredValue += inputImage[pixel_i, pixel_j]
+                imagePixelValue = inputImage[pixel_i, pixel_j]
+                gImageWeights = gaussianWeightsWarp[kernel_y, kernel_x]
 
-        blurredMean = blurredValue * (1.0 / (float(kernelSize) * float(kernelSize)))
+                
+                blurredValue += imagePixelValue * gImageWeights
+
+
+        # blurredMean = blurredValue * (1.0 / (float(kernelSize) * float(kernelSize)))
         # save to blur buffer warp array 
-        blurBufferImage[i, j] = blurredMean
+        blurBufferImage[i, j] = blurredValue
 
     @wp.kernel
     def unsharp_masking_edge_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2),
@@ -416,11 +425,18 @@ def main():
                 device=device
             )
     elif algo == "-s":
+
+        # this avoids the mix up between k and sigma (used in UM and gaussian blur)
+        customSigma = kernelSize // 3
+        gWeights = gaussianKernel(kernelSize, float(customSigma)).astype(np.float32)
+
         # need to do unsharp masking now 
         # convert to warp arrays
 
         inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
         blurBufferWarp = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+        gWarpWeights = wp.from_numpy(gWeights, dtype=wp.float32, device=device)
+
         edgeBufferWarp = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
         outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
 
@@ -429,7 +445,7 @@ def main():
         wp.launch(
             kernel = blurKernel,
             dim = numpyArr.shape,
-            inputs = [inWarpImage, blurBufferWarp],
+            inputs = [inWarpImage, blurBufferWarp, gWarpWeights],
             device=device
         )
 
