@@ -41,9 +41,9 @@ def kernSize():
 
 def param():
     try:
-        value = int(sys.argv[3])   # convert string to int
-        if value == 0:
-            value = 1
+        value = float(sys.argv[3])   # convert string to int
+        if value == 0.0:
+            value = 1.0
         return value
     except ValueError:
         print("incorrect value for param provided")
@@ -131,21 +131,37 @@ def gaussianKernel(l, sig):
     return kernel / np.sum(kernel)
 
 def create_kernel_denoising_greyScale(kernelSize, shape):
-
+    """ 
+    Kernel closur with the constants:
+      - kernelSize
+      - shape (image.shape) 
+    contains the denoising function: denoising_greyScale
+    """
     height, width = shape 
     radius = kernelSize // 2
-
     @wp.kernel  
     def denoising_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2),
                             outputImage: wp.array(dtype=wp.float32, ndim=2),
                             gWeightsWarp: wp.array(dtype=wp.float32, ndim=2) ):
+        """
+        Computes the convolution for removing noise from a grey scale image
+        Args:
+          - inputImage: warp array of the input image 
+          - outputImage: warp array to store the return values of the new image
+          - gWeightsWarp: gaussian weights array 
+        """
         i, j = wp.tid()
         smoothedValue = 0.0
 
+        # follows the 2d convolution from lecture 12 page 14: g(x, y) = ΣΣ w(i, j) * f(x + i, w + i)
+        # where g(x, y) is the smoothed value 
+        # w(i, j) is the weight form gaussian kernel
+        # f(x + i, y + i) is the input image pixel at its positon (with offset calculated) 
+        # for the following below: i --> offest_i = kernel_y - radius and j --> offset_j = kernel_x - radius 
         for kernel_y in range(kernelSize):
             for kernel_x in range(kernelSize):
 
-                # handle the pixels withint he k x k radius 
+                # handle the pixels withint he k x k window 
                 offset_i = kernel_y - radius  #computes the offset from the center of the kernel 
                 offset_j = kernel_x - radius 
 
@@ -157,9 +173,10 @@ def create_kernel_denoising_greyScale(kernelSize, shape):
 
                 # height: for pixel_i --> bounds for pixels_i are witin range {0, height} anything outside is a boarder issue and must be refelcted  
                 if pixel_i < 0:
-                    pixel_i = -pixel_i
+                    pixel_i = -pixel_i   # just need the inverse, this is a simple flip when the value is negative 
                 elif pixel_i >= height: 
                     # formula derived from lecture 12: using the reflection strategy for pixels outside the bottom of the image 
+                    # forula reenforced from opencv guthub as well: https://github.com/opencv/opencv/blob/4.x/modules/core/src/opencl/copymakeborder.cl 
                     # Example for a 4x4 image:
                     # height = 4, valid row index's: [0, 1, 2, 3]
                     #        outside border index's: [4, 5, 6, 7, ...]
@@ -213,7 +230,7 @@ def create_kernel_denoising_colour(kernelSize, shape):
         for kernel_y in range(kernelSize):
             for kernel_x in range(kernelSize):
 
-                # handle the pixels withint he k x k radius 
+                # handle the pixels withint he k x k window 
                 offset_i = kernel_y - radius  #computes the offset from the center of the kernel 
                 offset_j = kernel_x - radius 
 
@@ -265,8 +282,88 @@ def create_kernel_denoising_colour(kernelSize, shape):
         outputImage[i, j, z] = smoothedValue
     return denoising_colour
 
+def create_kernel_unsharp_masking_greyScale(kernelSize, shape, k):
+    """
+    Function used to compute unsharp masking using mean filtering. 
+    Follows the following formulas: 
+    f(x, y) is the original image 
+    Creating the edge image: g(x, y) = f(x, y) - S(f(x, y)) 
+    where S(f(x, y)) is the blurred version of the original image
+    Creating the Unsharp Masking image: fUM(x, y) = f(x, y) + kg(x, y) 
+    where g(x, y) is the edge image , k is the scaling constant (reasonable values lie between 0.2 and 0.7)
+    
+    """
+    height, width = shape
+    radius = kernelSize // 2
 
-            
+    @wp.kernel
+    def unsharp_masking_blur_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2),
+                                       blurBufferImage: wp.array(dtype=wp.float32, ndim=2)):
+        """computes S(f(x, y)) --> the blurred image and write it to the output buffer array: blurBufferImage"""
+        
+        i, j = wp.tid()
+        blurredValue = 0.0
+        blurredMean = 0.0
+
+        for kernel_y in range(kernelSize):
+            for kernel_x in range(kernelSize):
+                # handle the pixels withint he k x k window 
+                # need offsets
+                offset_i = kernel_y - radius  #computes the offset from the center of the kernel 
+                offset_j = kernel_x - radius 
+
+                # need pixel pos
+                pixel_i = i + offset_i #computes the position of the pixel within the neigbourhood 
+                pixel_j = j + offset_j 
+
+                # handle edges for height and width 
+                if pixel_i < 0:
+                    pixel_i = -pixel_i
+                elif pixel_i >= height:
+                    pixel_i = 2 * height - pixel_i - 2
+
+                if pixel_j < 0:
+                    pixel_j = -pixel_j
+                elif pixel_j >= width:
+                    pixel_j = 2 * width - pixel_j - 2
+
+                # calc blurred value from original image 
+                blurredValue += inputImage[pixel_i, pixel_j]
+
+        blurredMean = blurredValue * (1.0 / (float(kernelSize) * float(kernelSize)))
+        # save to blur buffer warp array 
+        blurBufferImage[i, j] = blurredMean
+
+    @wp.kernel
+    def unsharp_masking_edge_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2),
+                                       blurBufferImage: wp.array(dtype=wp.float32, ndim=2),
+                                       edgeBufferImage: wp.array(dtype=wp.float32, ndim=2)):
+        """Computes the edge image based on the following formula: g(x, y) = f(x, y) - S(f(x, y))"""
+        i, j = wp.tid()
+
+        edgeBufferImage[i, j] = inputImage[i, j] - blurBufferImage[i, j]
+        
+
+    @wp.kernel
+    def unsharp_masking_sharpen_greyScale(inputImage: wp.array(dtype=wp.float32, ndim=2), 
+                                          edgeBufferImage: wp.array(dtype=wp.float32, ndim=2),
+                                          outputImage: wp.array(dtype=wp.float32, ndim=2)):
+        """Computes the unsharp masking image based on the following formula: fUM(x, y) = f(x, y) + k * g(x, y)"""
+        i, j = wp.tid() 
+
+        tempValue = inputImage[i, j] + (float(k) * edgeBufferImage[i, j])
+        
+        # used to deal with excessive overshots?
+        if tempValue < 0.0:
+            tempValue = 0.0
+        elif tempValue > 255.0:
+            tempValue = 255.0
+
+        outputImage[i, j] = tempValue
+
+    return unsharp_masking_blur_greyScale, unsharp_masking_edge_greyScale, unsharp_masking_sharpen_greyScale
+    
+
 
 
 
@@ -278,7 +375,6 @@ def main():
     # init warp and set device type
     wp.init()
     device = "cpu"
-
 
     if algo == "-n":
         gWeights = gaussianKernel(kernelSize, float(k)).astype(np.float32)
@@ -319,6 +415,40 @@ def main():
                 inputs = [inWarpImage, outWarpImage, gWarpWeights],
                 device=device
             )
+    elif algo == "-s":
+        # need to do unsharp masking now 
+        # convert to warp arrays
+
+        inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
+        blurBufferWarp = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+        edgeBufferWarp = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+        outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+
+        blurKernel, edgeKernel, sharpenKernel = create_kernel_unsharp_masking_greyScale(kernelSize, numpyArr.shape, k)
+
+        wp.launch(
+            kernel = blurKernel,
+            dim = numpyArr.shape,
+            inputs = [inWarpImage, blurBufferWarp],
+            device=device
+        )
+
+        wp.launch(
+            kernel = edgeKernel,
+            dim = numpyArr.shape,
+            inputs = [inWarpImage, blurBufferWarp, edgeBufferWarp],
+            device=device 
+        )
+
+        wp.launch(
+            kernel = sharpenKernel,
+            dim = numpyArr.shape,
+            inputs = [inWarpImage, edgeBufferWarp, outWarpImage],
+            device=device
+        )
+
+
+
 
 
 
