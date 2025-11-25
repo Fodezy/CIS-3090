@@ -42,6 +42,8 @@ def kernSize():
 def param():
     try:
         value = int(sys.argv[3])   # convert string to int
+        if value == 0:
+            value = 1
         return value
     except ValueError:
         print("incorrect value for param provided")
@@ -73,6 +75,8 @@ def processArgs():
     - param: param is the additional numerical parameter that the algorithm needs - e.g. the scaling value k for unsharp masking or sigma for the gaussian. If your algorithm doesn't need any additional parameters once it knows the kernel size, just pass some dummy value here (e.g. 0)
     - inFileName: inFileName is the name of the input image file
     - outFileName: outFileName is the name of the output image file
+
+    Returns: algo choosen, k value, and p value
     """
 
     isArgs : bool = isArgSize()
@@ -82,10 +86,12 @@ def processArgs():
         exit()
 
     algo : str = algType()
-    kSize : int = kernSize()
-    p : int = param()
+    kernelSize : int = kernSize()
+    k : int = param()
     fNameIn : str = inFileName()
     fNameOut : str = outFileName()
+
+    return algo, kernelSize, k 
 
 # load image with PIL 
 
@@ -110,52 +116,122 @@ def loadImg():
 
     return numpyArr, imgMode
 
+# Source - https://stackoverflow.com/questions/29731726/how-to-calculate-a-gaussian-kernel-matrix-efficiently-in-numpy
+# Posted by clemisch, modified by community. See post 'Timeline' for change history
+# Retrieved 2025-11-24, License - CC BY-SA 4.0
+import numpy as np
+   
+def gaussianKernel(l, sig):
+    """
+    creates gaussian kernel with side length `l` and a sigma of `sig`
+    """
+    ax = np.linspace(-(l - 1) / 2., (l - 1) / 2., l)
+    gauss = np.exp(-0.5 * np.square(ax) / np.square(sig))
+    kernel = np.outer(gauss, gauss)
+    return kernel / np.sum(kernel)
+
+def create_kernel_denoising_greyScale(gWeights, kernelSize, sigma, shape, device):
+
+    height, width = shape 
+    radius = kernelSize // 2
+    gWeightsWarp = wp.from_numpy(gWeights.astype(np.float32), dtype=wp.float32, device=device)
+
+    @wp.kernel  
+    def denoising_greyScale(inputImage: wp.array(dtype=wp.float32),
+                            outputImage:wp.array(dtype=wp.float32)):
+        i, j = wp.tid()
+        accum = 0.0
+
+        for kernel_y in range(kernelSize):
+            for kernel_k in range(kernelSize):
+
+                # handle the pixels withint he k x k radius 
+                offset_i = kernel_y - radius  #computes the offset from the center of the kernel 
+                offset_j = kernel_k - radius 
+
+                pixel_i = i + offset_i #computes the position of the pixel within the neigbourhood 
+                pixel_j = j + offset_j 
+
+                # handle boarder using the reflection statagy dicsussed in lecutre as it is the recomended approach 
+                # need to handle both possitions pixel_i & pixel_j
+
+                # for pixel_i --> bounds for pixels_i are witin range {0, height} anything outside is a boarder issue and must be refelcted  
+                if pixel_i < 0:
+                    pixel_i = -pixel_i
+                elif pixel_i >= height: 
+                    # formula derived from lecture 12: using the reflection strategy for pixels outside the bottom of the image 
+                    # Example for a 4x4 image:
+                    # height = 4, valid row index's: [0, 1, 2, 3]
+                    #        outside border index's: [4, 5, 6, 7, ...]
+
+                    # for pixel_i = 5 which is two bellow the image border 
+                    # reflection would occur as follows:
+                    # 2 * height - pixel_i - 2 --> 2 * 4 - 5 - 2
+                    # 8 - 5 - 2 --> 8 - 7
+                    # reflected pixel = 1 
 
 
-def sharpenClosure(N):
-    @wp.kernel
-    def greyScaleSharpen():
+                    # Boundry would be 3 in this case
+                    # since pixel 5 was two rows from the boundry its reflection should be two rows witin the boundry  
+                    # the same logic can be applied for pixel 6 where its reflection would be 0
+                    # this can be seen as: [4, 5, 6, 7, ...] pixel 6 is three rows outside the boundry
+                    # and [0, 1, 2, [3]] pixel 0 is also three rows within the boundry 
+                    # all valid reflections for this would be: 6 <-> 0, 5 <-> 1, 4 <-> 2 || 3 is the boundry therfore no valid reflection 
+                    pixel_i = 2 * height - pixel_i - 2 
+ 
 
-    @wp.kernel
-    def colourSharpen():
 
 
 
+        
+    return denoising_greyScale
 
-def algTypeProcessing():
-    def sharpen():
-        """Uses unsharp masking to sharpen the image"""
-
-        # produce edge image: g(x, y) from input image f(x, y)-- > g(x, y) = f(x, y) - S(f(x, y))
-        # where S(f(x, y)) is a blurred version of f(x, y)
-
-        # edge image can be use for sharpening when added back to the original image:
-        # fUM(x, y) = f(x, y) + kg(x, y) 
-        # where k is a scalling constant: reasonable values of k vary between 0.2 and 0.7 (larger values provide increasing amount of sharpening)
-        a = 1 + 1
-
-        # continue
-
-    # def noiseRemoval():
-        # continue
 
 
 
 def main():
-    processArgs()
-    imageArr, imgMode = loadImg()
+    algo, kernelSize, k = processArgs()
+    numpyArr, imgMode = loadImg()
+    print(k)
 
     # init warp and set device type
     wp.init()
     device = "cpu"
 
-    # get dimension size and set warp data arrays
-    dim = imageArr.shape
-    inWarpImage = wp.array(imageArr, dtype=wp.float32, device=device)
-    outWarpImage = wp.zeros(shape=dm, dtype.wpfloat32, device=device)
-    
-    # print(imageArr.shape)
 
+    if algo == "-n":
+        gWeights = gaussianKernel(kernelSize, float(k)).astype(np.float32)
+
+
+        if imgMode == "L":
+            # need to load image and convert from PIL to NumPy --> this step is done within the within the loadImg function 
+            # Convert this to warp arrays
+            inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
+            outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+            # print(numpyArr.shape)
+
+            # create and call closure: args gaussian weights, kernel size, sigma, shape 
+            denoising_kernel = create_kernel_denoising_greyScale(gWeights, kernelSize, k, numpyArr.shape, device)
+
+            wp.launch(
+                kernel = denoising_kernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, outWarpImage],
+                device=device
+            )
+
+            # launch warp kernel 
+            # convert warp output to PIL image 
+
+
+
+        # elif imgMode == "RGB":
+
+
+            
+
+        
+        
 
 
 
