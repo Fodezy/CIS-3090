@@ -427,7 +427,7 @@ def main():
     elif algo == "-s":
 
         # this avoids the mix up between k and sigma (used in UM and gaussian blur)
-        customSigma = kernelSize // 3
+        customSigma = kernelSize / 3
         gWeights = gaussianKernel(kernelSize, float(customSigma)).astype(np.float32)
 
         # need to do unsharp masking now 
@@ -442,26 +442,27 @@ def main():
 
         blurKernel, edgeKernel, sharpenKernel = create_kernel_unsharp_masking_greyScale(kernelSize, numpyArr.shape, k)
 
-        wp.launch(
-            kernel = blurKernel,
-            dim = numpyArr.shape,
-            inputs = [inWarpImage, blurBufferWarp, gWarpWeights],
-            device=device
-        )
+        if imgMode == "L":
+            wp.launch(
+                kernel = blurKernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, blurBufferWarp, gWarpWeights],
+                device=device
+            )
 
-        wp.launch(
-            kernel = edgeKernel,
-            dim = numpyArr.shape,
-            inputs = [inWarpImage, blurBufferWarp, edgeBufferWarp],
-            device=device 
-        )
+            wp.launch(
+                kernel = edgeKernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, blurBufferWarp, edgeBufferWarp],
+                device=device 
+            )
 
-        wp.launch(
-            kernel = sharpenKernel,
-            dim = numpyArr.shape,
-            inputs = [inWarpImage, edgeBufferWarp, outWarpImage],
-            device=device
-        )
+            wp.launch(
+                kernel = sharpenKernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, edgeBufferWarp, outWarpImage],
+                device=device
+            )
 
 
 
