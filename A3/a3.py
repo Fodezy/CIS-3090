@@ -195,8 +195,76 @@ def create_kernel_denoising_greyScale(kernelSize, shape):
                 # Convlution averaging from lecture 12 pg: 14  --> calculating g(x, y) here [gaussian blurred value] for each kernel  
                 smoothedValue += imagePixelValue * gImageWeights
         outputImage[i, j] = smoothedValue
-
     return denoising_greyScale
+
+
+def create_kernel_denoising_colour(kernelSize, shape):
+    height, width, colourChannels = shape
+    radius = kernelSize // 2
+
+    @wp.kernel
+    def denoising_colour(inputImage: wp.array(dtype=wp.float32, ndim=3),
+                         outputImage: wp.array(dtype=wp.float32, ndim=3),
+                         gWeightsWarp: wp.array(dtype=wp.float32, ndim=2)):
+        
+        i, j, z = wp.tid()
+        smoothedValue = 0.0 
+
+        for kernel_y in range(kernelSize):
+            for kernel_x in range(kernelSize):
+
+                # handle the pixels withint he k x k radius 
+                offset_i = kernel_y - radius  #computes the offset from the center of the kernel 
+                offset_j = kernel_x - radius 
+
+                pixel_i = i + offset_i #computes the position of the pixel within the neigbourhood 
+                pixel_j = j + offset_j 
+
+                # handle boarder using the reflection statagy dicsussed in lecutre as it is the recomended approach 
+                # need to handle both possitions pixel_i & pixel_j
+
+                # height: for pixel_i --> bounds for pixels_i are witin range {0, height} anything outside is a boarder issue and must be refelcted  
+                if pixel_i < 0:
+                    pixel_i = -pixel_i
+                elif pixel_i >= height: 
+                    # formula derived from lecture 12: using the reflection strategy for pixels outside the bottom of the image 
+                    # Example for a 4x4 image:
+                    # height = 4, valid row index's: [0, 1, 2, 3]
+                    #        outside border index's: [4, 5, 6, 7, ...]
+
+                    # for pixel_i = 5 which is two bellow the image border 
+                    # reflection would occur as follows:
+                    # 2 * height - pixel_i - 2 --> 2 * 4 - 5 - 2
+                    # 8 - 5 - 2 --> 8 - 7
+                    # reflected pixel = 1 
+
+
+                    # Boundry would be 3 in this case
+                    # since pixel 5 was two rows from the boundry its reflection should be two rows witin the boundry  
+                    # the same logic can be applied for pixel 6 where its reflection would be 0
+                    # this can be seen as: [4, 5, 6, 7, ...] pixel 6 is three rows outside the boundry
+                    # and [0, 1, 2, [3]] pixel 0 is also three rows within the boundry 
+                    # all valid reflections for this would be: 6 <-> 0, 5 <-> 1, 4 <-> 2 || 3 is the boundry therfore no valid reflection 
+                    pixel_i = 2 * height - pixel_i - 2 
+ 
+
+                #width: for pixel_j -> bounds for pixel_j are within the range {0, width}
+                if pixel_j < 0:
+                    pixel_j = -pixel_j
+                elif pixel_j >= width:
+                    pixel_j = 2 * width - pixel_j - 2 # same logic as above but for width boarder issues now 
+
+                # now that we have the pixel positons (adjustments for border issues taken into account) we can get the pixels actually value 
+                imagePixelValue = inputImage[pixel_i, pixel_j, z]
+
+                # need the gaussian weights as well to figure out the smoothing values 
+                gImageWeights = gWeightsWarp[kernel_y, kernel_x] 
+
+                # Convlution averaging from lecture 12 pg: 14  --> calculating g(x, y) here [gaussian blurred value] for each kernel  
+                smoothedValue += imagePixelValue * gImageWeights
+        outputImage[i, j, z] = smoothedValue
+    return denoising_colour
+
 
             
 
@@ -231,15 +299,29 @@ def main():
                 kernel = denoising_kernel,
                 dim = numpyArr.shape,
                 inputs = [inWarpImage, outWarpImage, gWarpWeights],
-                device=device
+                device = device
             )
 
             # launch warp kernel 
             # convert warp output to PIL image 
 
+        elif imgMode == "RGB":
+            # same as above with the addition of a third dim for RBG -->shape is now H, W, C
+            inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
+            outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+            gWarpWeights = wp.from_numpy(gWeights, dtype=wp.float32, device=device)
+
+            denoising_kernel = create_kernel_denoising_colour(kernelSize, numpyArr.shape)
+
+            wp.launch(
+                kernel = denoising_kernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, outWarpImage, gWarpWeights],
+                device=device
+            )
 
 
-        # elif imgMode == "RGB":
+
     numpyOutArr = outWarpImage.numpy()
     imageOut = Image.fromarray(np.uint8(numpyOutArr))
     imageOut.save(outFileName())
