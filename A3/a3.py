@@ -41,7 +41,7 @@ def kernSize():
 
 def param():
     try:
-        value = float(sys.argv[3])   # convert string to int
+        value = float(sys.argv[3])   # convert string to float
         if value == 0.0:
             value = 1.0
         return value
