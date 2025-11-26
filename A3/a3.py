@@ -373,7 +373,63 @@ def create_kernel_unsharp_masking_greyScale(kernelSize, shape, k):
     return unsharp_masking_blur_greyScale, unsharp_masking_edge_greyScale, unsharp_masking_sharpen_greyScale
     
 
+def create_kernel_unsharp_masking_colour(kernelSize, shape, k):
+    height, width, colourChannels = shape
+    radius = kernelSize // 2
+    
+    @wp.kernel 
+    def unsharp_masking_blur_colour(inputImage: wp.array(dtype=wp.float32, ndim=3),
+                                    blurBufferImage: wp.array(dtype=wp.float32, ndim=3), 
+                                    gWeightsWarp: wp.array(dtype=wp.float32, ndim=2)):
+        i, j, z = wp.tid()
+        smoothedvalue = 0.0 
 
+        for kernel_y in range(kernelSize):
+            for kernel_x in range(kernelSize):
+                offset_i = kernel_y - radius
+                offset_j = kernel_x - radius
+
+                pixel_i = i + offset_i
+                pixel_j = j + offset_j 
+
+                if pixel_i < 0:
+                    pixel_i = -pixel_i
+                elif pixel_i >= height:
+                    pixel_i = 2 * height - pixel_i - 2
+
+                if pixel_j < 0:
+                    pixel_j = -pixel_j
+                elif pixel_j >= width:
+                    pixel_j = 2 * width - pixel_j - 2
+
+                imagePixelValue = inputImage[pixel_i, pixel_j, z]
+                gImageWeights = gWeightsWarp[kernel_y, kernel_x] 
+
+                smoothedvalue += imagePixelValue * gImageWeights
+        blurBufferImage[i, j, z] = smoothedvalue
+
+    @wp.kernel 
+    def unsharp_masking_edge_colour(inputImage: wp.array(dtype=wp.float32, ndim=3),
+                                    blurBufferImage: wp.array(dtype=wp.float32, ndim=3),
+                                    edgeBufferImage: wp.array(dtype=wp.float32, ndim=3)):
+        i, j, z = wp.tid()
+        edgeBufferImage[i, j, z] = inputImage[i, j, z] - blurBufferImage[i, j, z]
+
+    @wp.kernel 
+    def unsharp_masking_sharpen_colour(inputImage: wp.array(dtype=wp.float32, ndim=3), 
+                                       edgeBufferImage: wp.array(dtype=wp.float32, ndim=3), 
+                                       outputImage: wp.array(dtype=wp.float32, ndim=3)):     
+        i, j, z = wp.tid()
+        tempValue = inputImage[i, j, z] + (float(k) * edgeBufferImage[i, j, z])
+
+        if tempValue < 0.0:
+            tempValue = 0.0
+        elif tempValue > 255.0:
+            tempValue = 255.0
+
+        outputImage[i, j, z] = tempValue
+        
+    return unsharp_masking_blur_colour, unsharp_masking_edge_colour, unsharp_masking_sharpen_colour
 
 
 def main():
@@ -440,9 +496,10 @@ def main():
         edgeBufferWarp = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
         outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
 
-        blurKernel, edgeKernel, sharpenKernel = create_kernel_unsharp_masking_greyScale(kernelSize, numpyArr.shape, k)
 
         if imgMode == "L":
+            blurKernel, edgeKernel, sharpenKernel = create_kernel_unsharp_masking_greyScale(kernelSize, numpyArr.shape, k)
+           
             wp.launch(
                 kernel = blurKernel,
                 dim = numpyArr.shape,
@@ -464,7 +521,29 @@ def main():
                 device=device
             )
 
+        elif imgMode == "RGB":
+            blurKernel, edgeKernel, sharpenKernel = create_kernel_unsharp_masking_colour(kernelSize, numpyArr.shape, k)
+            
+            wp.launch(
+                kernel = blurKernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, blurBufferWarp, gWarpWeights],
+                device=device
+            )
 
+            wp.launch(
+                kernel = edgeKernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, blurBufferWarp, edgeBufferWarp],
+                device=device 
+            )
+
+            wp.launch(
+                kernel = sharpenKernel,
+                dim = numpyArr.shape,
+                inputs = [inWarpImage, edgeBufferWarp, outWarpImage],
+                device=device
+            )
 
 
 
