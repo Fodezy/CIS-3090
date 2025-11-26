@@ -444,13 +444,15 @@ def main():
     if algo == "-n":
         gWeights = gaussianKernel(kernelSize, float(k)).astype(np.float32)
 
+        inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
+        outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
+        gWarpWeights = wp.from_numpy(gWeights, dtype=wp.float32, device=device)
+
 
         if imgMode == "L":
             # need to load image and convert from PIL to NumPy --> this step is done within the within the loadImg function 
             # Convert this to warp arrays
-            inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
-            outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
-            gWarpWeights = wp.from_numpy(gWeights, dtype=wp.float32, device=device)
+
             # print(numpyArr.shape)
 
             # create and call closure: args gaussian weights, kernel size, sigma, shape 
@@ -468,9 +470,6 @@ def main():
 
         elif imgMode == "RGB":
             # same as above with the addition of a third dim for RBG -->shape is now H, W, C
-            inWarpImage = wp.from_numpy(numpyArr, dtype=wp.float32, device=device)
-            outWarpImage = wp.zeros(shape=numpyArr.shape, dtype=wp.float32, device=device)
-            gWarpWeights = wp.from_numpy(gWeights, dtype=wp.float32, device=device)
 
             denoising_kernel = create_kernel_denoising_colour(kernelSize, numpyArr.shape)
 
@@ -551,15 +550,6 @@ def main():
     numpyOutArr = outWarpImage.numpy()
     imageOut = Image.fromarray(np.uint8(numpyOutArr))
     imageOut.save(outFileName())
-
-
-            
-
-        
-        
-
-
-
 
 
 if __name__ == "__main__":
