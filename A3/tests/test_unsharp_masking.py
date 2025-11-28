@@ -59,109 +59,68 @@ def main():
     
     results = []
     
-    # Test Case 1: Slightly Blurry Image
-    test_image = os.path.join(input_dir, "schwyz_townhall.jpg")
+    # Test Case 1: noise_1 with varying k_parameter (0.3, 0.5, 0.7, 1.5)
+    # Default: kernel_size=5, gaussian_blur=1.0
+    test_image = os.path.join(input_dir, "noise_1.jpg")
     if os.path.exists(test_image):
+        for k_val in [0.3, 0.5, 0.7, 1.5]:
         results.append((
             run_test(
                 test_image,
-                os.path.join(output_dir, "unsharp_test1_blurry_k0.2.jpg"),
-                5, 0.2,
-                "Test 1a: Slightly blurry image, k=0.2 (subtle sharpening)"
-            ),
-            "Test 1a: Subtle sharpening"
-        ))
-        results.append((
-            run_test(
-                test_image,
-                os.path.join(output_dir, "unsharp_test1_blurry_k0.5.jpg"),
-                5, 0.5,
-                "Test 1b: Slightly blurry image, k=0.5 (moderate sharpening)"
-            ),
-            "Test 1b: Moderate sharpening"
-        ))
-        results.append((
-            run_test(
-                test_image,
-                os.path.join(output_dir, "unsharp_test1_blurry_k0.7.jpg"),
-                5, 0.7,
-                "Test 1c: Slightly blurry image, k=0.7 (strong sharpening)"
-            ),
-            "Test 1c: Strong sharpening"
+                    os.path.join(output_dir, f"unsharp_test1_noise1_k{k_val}.jpg"),
+                    5, k_val,
+                    f"Test 1: noise_1, k={k_val} (kernel_size=5, gaussian_blur=1.0)"
+                ),
+                f"Test 1: noise_1, k={k_val}"
         ))
     else:
         print(f"WARNING: Test image not found: {test_image}")
     
-    # Test Case 2: High-Contrast Image
-    # Note: dog_rgb.jpg - format can be checked with check_image_formats.py
-    # The name suggests RGB, but the code handles both RGB and RGBA
+    # Test Case 2: noise_2 with varying kernel sizes (3, 5, 7, 9)
+    # Default: k_parameter=0.5, gaussian_blur=1.0
+    test_image = os.path.join(input_dir, "noise_2.jpg")
+    if os.path.exists(test_image):
+        for kernel_size in [3, 5, 7, 9]:
+        results.append((
+            run_test(
+                test_image,
+                    os.path.join(output_dir, f"unsharp_test2_noise2_kernel{kernel_size}.jpg"),
+                    kernel_size, 0.5,
+                    f"Test 2: noise_2, kernel_size={kernel_size} (k=0.5, gaussian_blur=1.0)"
+            ),
+                f"Test 2: noise_2, kernel_size={kernel_size}"
+        ))
+    else:
+        print(f"WARNING: Test image not found: {test_image}")
+    
+    # Test Case 3: bird_rgba converting to RGB
+    # Default: kernel_size=5, k_parameter=0.5, gaussian_blur=1.0
+    test_image = os.path.join(input_dir, "bird_rgba.png")
+    if os.path.exists(test_image):
+        results.append((
+            run_test(
+                test_image,
+                os.path.join(output_dir, "unsharp_test3_bird_rgb.png"),
+                5, 0.5,
+                "Test 3: bird_rgba converting to RGB (kernel_size=5, k=0.5, gaussian_blur=1.0)"
+            ),
+            "Test 3: bird_rgba to RGB"
+        ))
+    else:
+        print(f"WARNING: Test image not found: {test_image}")
+    
+    # Test Case 4: dog_rgb - see if anything happens to already sharp image
+    # Default: kernel_size=5, k_parameter=0.5, gaussian_blur=1.0
     test_image = os.path.join(input_dir, "dog_rgb.jpg")
     if os.path.exists(test_image):
         results.append((
             run_test(
                 test_image,
-                os.path.join(output_dir, "unsharp_test2_highcontrast.jpg"),
+                os.path.join(output_dir, "unsharp_test4_dog_rgb.jpg"),
                 5, 0.5,
-                "Test 2: High-contrast image with details (dog_rgb.jpg)"
+                "Test 4: dog_rgb - already sharp image (kernel_size=5, k=0.5, gaussian_blur=1.0)"
             ),
-            "Test 2: High-contrast image"
-        ))
-    else:
-        print(f"WARNING: Test image not found: {test_image}")
-    
-    # Test Case 3: RGB Image (rgbImg.jpg)
-    # This is an RGB image - tests RGB color channel processing
-    test_image = os.path.join(input_dir, "rgbImg.jpg")
-    if os.path.exists(test_image):
-        results.append((
-            run_test(
-                test_image,
-                os.path.join(output_dir, "unsharp_test3_rgb.jpg"),
-                5, 0.5,
-                "Test 3: RGB image (rgbImg.jpg)"
-            ),
-            "Test 3: RGB image"
-        ))
-    else:
-        print(f"WARNING: Test image not found: {test_image}")
-    
-    # Test Case 4: RGBA Image (rgbaImg.png)
-    # This is an RGBA image - tests RGBA to RGB conversion and processing
-    # The code automatically converts RGBA to RGB before processing
-    test_image = os.path.join(input_dir, "rgbaImg.png")
-    if os.path.exists(test_image):
-        results.append((
-            run_test(
-                test_image,
-                os.path.join(output_dir, "unsharp_test4_rgba.png"),
-                5, 0.5,
-                "Test 4: RGBA image (rgbaImg.png) - converted to RGB"
-            ),
-            "Test 4: RGBA image (converted to RGB)"
-        ))
-    else:
-        print(f"WARNING: Test image not found: {test_image}")
-    
-    # Test Case 5: Parameter Testing - Different kernel sizes
-    test_image = os.path.join(input_dir, "schwyz_townhall.jpg")
-    if os.path.exists(test_image):
-        results.append((
-            run_test(
-                test_image,
-                os.path.join(output_dir, "unsharp_test5_kernel3.jpg"),
-                3, 0.5,
-                "Test 5a: Kernel size 3x3"
-            ),
-            "Test 5a: Kernel size 3"
-        ))
-        results.append((
-            run_test(
-                test_image,
-                os.path.join(output_dir, "unsharp_test5_kernel7.jpg"),
-                7, 0.5,
-                "Test 5b: Kernel size 7x7"
-            ),
-            "Test 5b: Kernel size 7"
+            "Test 4: dog_rgb (already sharp)"
         ))
     else:
         print(f"WARNING: Test image not found: {test_image}")

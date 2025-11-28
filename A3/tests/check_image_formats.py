@@ -31,6 +31,7 @@ def main():
     
     images_to_check = [
         os.path.join(imgs_dir, "dog_rgb.jpg"),
+        os.path.join(imgs_dir, "bird_rgba.png"),
         os.path.join(imgs_dir, "rgbImg.jpg"),
         os.path.join(imgs_dir, "rgbaImg.png"),
         os.path.join(imgs_dir, "schwyz_townhall.jpg"),
